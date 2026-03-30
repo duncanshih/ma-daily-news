@@ -90,12 +90,56 @@ RSS_SOURCES = {
 
     # ── 台灣 / 亞太 ──
     "UDN_Securities": {
-        "url": "https://money.udn.com/rssfeed/news/1001/5590/rss2.xml",
+        "url": "https://money.udn.com/rssfeed/news/1001/5590",
         "category": "taiwan", "lang": "zh", "name": "經濟日報 證券"
     },
     "UDN_Intl": {
-        "url": "https://money.udn.com/rssfeed/news/1001/12925/rss2.xml",
+        "url": "https://money.udn.com/rssfeed/news/1001/5588",
         "category": "taiwan", "lang": "zh", "name": "經濟日報 國際"
+    },
+    "UDN_Industry": {
+        "url": "https://money.udn.com/rssfeed/news/1001/5591",
+        "category": "taiwan", "lang": "zh", "name": "經濟日報 產業"
+    },
+    "UDN_Finance": {
+        "url": "https://money.udn.com/rssfeed/news/1001/12017",
+        "category": "taiwan", "lang": "zh", "name": "經濟日報 金融"
+    },
+    "CTEE_Industry": {
+        "url": "https://www.ctee.com.tw/rss_web/livenews/industry",
+        "category": "taiwan", "lang": "zh", "name": "工商時報 產業"
+    },
+    "CTEE_Finance": {
+        "url": "https://www.ctee.com.tw/rss_web/livenews/finance",
+        "category": "taiwan", "lang": "zh", "name": "工商時報 金融"
+    },
+    "CTEE_World": {
+        "url": "https://www.ctee.com.tw/rss_web/livenews/world",
+        "category": "taiwan", "lang": "zh", "name": "工商時報 國際"
+    },
+    "CTEE_Stock": {
+        "url": "https://www.ctee.com.tw/rss_web/livenews/stock",
+        "category": "taiwan", "lang": "zh", "name": "工商時報 證券"
+    },
+    "CNA_Finance": {
+        "url": "https://feeds.feedburner.com/rsscna/finance",
+        "category": "taiwan", "lang": "zh", "name": "中央社 財經"
+    },
+    "CNA_Intl": {
+        "url": "https://feeds.feedburner.com/rsscna/intworld",
+        "category": "taiwan", "lang": "zh", "name": "中央社 國際"
+    },
+    "CNA_Tech": {
+        "url": "https://feeds.feedburner.com/rsscna/technology",
+        "category": "taiwan", "lang": "zh", "name": "中央社 科技"
+    },
+    "LTN_Finance": {
+        "url": "https://news.ltn.com.tw/rss/business.xml",
+        "category": "taiwan", "lang": "zh", "name": "自由財經"
+    },
+    "MoneyDJ": {
+        "url": "https://www.moneydj.com/KMDJ/RssCenter.aspx?svc=NH",
+        "category": "taiwan", "lang": "zh", "name": "MoneyDJ 理財網"
     },
 }
 

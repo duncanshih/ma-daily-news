@@ -532,6 +532,45 @@ body.theme-light .card .contradiction {
     font-style: italic;
 }
 
+/* ── Taiwan sources ── */
+.card .tw-sources {
+    font-size: 13px;
+    color: var(--secondary-color);
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: rgba(239, 83, 80, 0.05);
+    border: 1px solid rgba(239, 83, 80, 0.12);
+    border-radius: 8px;
+    line-height: 1.6;
+}
+
+.card .tw-sources .tw-label {
+    font-weight: 600;
+    color: #EF5350;
+    margin-right: 6px;
+}
+
+body.theme-light .card .tw-sources {
+    background: rgba(239, 83, 80, 0.04);
+    border-color: rgba(239, 83, 80, 0.15);
+}
+
+body.theme-light .card .tw-sources .tw-label {
+    color: #D32F2F;
+}
+
+.card .tw-sources a {
+    color: #EF5350;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+body.theme-light .card .tw-sources a {
+    color: #D32F2F;
+}
+
+.card .tw-sources a:hover { opacity: 0.7; }
+
 /* ── Brief card ── */
 .card-brief {
     padding: 16px 24px;
@@ -691,6 +730,16 @@ def generate_html(analysis_json: dict, theme: str = "light") -> str:
                 for s in art.get("sources", [])
             )
 
+            # Build Taiwan sources block (shared by all formats)
+            tw_sources = art.get("tw_sources", [])
+            tw_html = ""
+            if tw_sources:
+                tw_links = " ｜ ".join(
+                    f'<a href="{s["url"]}" target="_blank">{s["name"]}</a>'
+                    for s in tw_sources
+                )
+                tw_html = f'<div class="tw-sources"><span class="tw-label">🇹🇼 台灣報導：</span>{tw_links}</div>'
+
             if fmt in ("A", "B"):
                 tracking = ""
                 if fmt == "B":
@@ -755,12 +804,14 @@ def generate_html(analysis_json: dict, theme: str = "light") -> str:
   {angle_html}
   {verbal_html}
   <div class="sources">{sources_links}</div>
+  {tw_html}
 </article>
 '''
             else:  # Format C
                 cards_html += f'''<article class="card card-brief">
   <p>📎 <strong>{art.get("title", "")}：</strong>{art.get("summary", "")}</p>
   <div class="sources">{sources_links}</div>
+  {tw_html}
 </article>
 '''
 
@@ -810,7 +861,7 @@ def generate_html(analysis_json: dict, theme: str = "light") -> str:
 
     <footer>
       <p>由 Claude 分析產出 · MA 面試準備用</p>
-      <p>RSS: CNBC · BBC · FT · WSJ · Al Jazeera · Yahoo Finance · 經濟日報 · TechCrunch</p>
+      <p>RSS: CNBC · BBC · FT · WSJ · Al Jazeera · Yahoo Finance · TechCrunch · 經濟日報 · 工商時報 · 中央社 · 自由財經 · MoneyDJ</p>
       <div class="keywords-footer">{keywords_html}</div>
       <p class="theme-badge">Theme: {theme_info['label']}</p>
     </footer>
