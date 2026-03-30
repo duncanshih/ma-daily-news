@@ -6,18 +6,20 @@
   <title>MA 時事日報 — 2026-03-30</title>
   <style>
 :root {
-    --bg-color: #000000;
-    --glow-start: #0A1929;
-    --glow-end: #1A3A52;
-    --title-color: #FFFFFF;
-    --text-color: #E3F2FD;
-    --accent-color: #42A5F5;
-    --secondary-color: #B0BEC5;
-    --surface: rgba(255, 255, 255, 0.05);
-    --surface-hover: rgba(255, 255, 255, 0.08);
-    --border: rgba(255, 255, 255, 0.10);
-    --border-hover: rgba(255, 255, 255, 0.20);
-    --interview: #FFA726;
+    --bg-color: #FFFFFF;
+    --glow-start: #E8F0FE;
+    --glow-end: #D2E3FC;
+    --title-color: #1A1A1A;
+    --text-color: #333333;
+    --accent-color: #1A73E8;
+    --accent-rgb: 26, 115, 232;
+    --secondary-color: #5F6368;
+    --surface: rgba(0, 0, 0, 0.03);
+    --surface-hover: rgba(0, 0, 0, 0.06);
+    --border: rgba(0, 0, 0, 0.10);
+    --border-hover: rgba(26, 115, 232, 0.30);
+    --interview: #E8710A;
+    --interview-rgb: 232, 113, 10;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -60,7 +62,7 @@ body {
     height: 50%;
     background: radial-gradient(
         circle at center,
-        rgba(66, 165, 245, 0.08) 0%,
+        rgba(var(--accent-rgb), 0.08) 0%,
         transparent 70%
     );
     filter: blur(60px);
@@ -102,15 +104,15 @@ header {
     width: 64px;
     height: 64px;
     border-radius: 20px;
-    background: rgba(66, 165, 245, 0.15);
+    background: rgba(var(--accent-rgb), 0.15);
     font-size: 32px;
     margin-bottom: 20px;
     animation: glow-pulse 3s ease-in-out infinite;
 }
 
 @keyframes glow-pulse {
-    0%, 100% { box-shadow: 0 0 30px rgba(66,165,245,0.3), 0 0 60px rgba(66,165,245,0.1); }
-    50% { box-shadow: 0 0 40px rgba(66,165,245,0.5), 0 0 80px rgba(66,165,245,0.2); }
+    0%, 100% { box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.3), 0 0 60px rgba(var(--accent-rgb), 0.1); }
+    50% { box-shadow: 0 0 40px rgba(var(--accent-rgb), 0.5), 0 0 80px rgba(var(--accent-rgb), 0.2); }
 }
 
 header h1 {
@@ -125,8 +127,8 @@ header h1 {
     display: inline-block;
     padding: 6px 16px;
     border-radius: 20px;
-    background: rgba(66, 165, 245, 0.12);
-    border: 1px solid rgba(66, 165, 245, 0.2);
+    background: rgba(var(--accent-rgb), 0.12);
+    border: 1px solid rgba(var(--accent-rgb), 0.2);
     color: var(--accent-color);
     font-size: 15px;
     font-weight: 500;
@@ -187,7 +189,7 @@ header h1 {
     min-width: 26px;
     height: 26px;
     background: var(--accent-color);
-    color: #000;
+    color: var(--bg-color);
     border-radius: 50%;
     font-size: 13px;
     font-weight: 700;
@@ -289,8 +291,8 @@ header h1 {
     font-size: 14px;
     color: var(--interview);
     padding: 10px 14px;
-    background: rgba(255, 167, 38, 0.08);
-    border: 1px solid rgba(255, 167, 38, 0.15);
+    background: rgba(var(--interview-rgb), 0.08);
+    border: 1px solid rgba(var(--interview-rgb), 0.15);
     border-radius: 10px;
     margin: 14px 0;
     line-height: 1.6;
@@ -311,6 +313,54 @@ header h1 {
 }
 
 .card .sources a:hover { opacity: 0.7; }
+
+/* ── Analysis framework fields ── */
+.card .transmission {
+    font-size: 14px;
+    color: var(--accent-color);
+    padding: 10px 14px;
+    background: rgba(var(--accent-rgb), 0.06);
+    border: 1px solid rgba(var(--accent-rgb), 0.12);
+    border-radius: 10px;
+    margin: 10px 0;
+    line-height: 1.6;
+    font-weight: 500;
+}
+
+.card .structural-tag {
+    font-size: 13px;
+    color: var(--secondary-color);
+    margin: 8px 0;
+    line-height: 1.5;
+}
+
+.card .contradiction {
+    font-size: 14px;
+    color: #E53935;
+    padding: 8px 14px;
+    background: rgba(229, 57, 53, 0.06);
+    border: 1px solid rgba(229, 57, 53, 0.12);
+    border-radius: 10px;
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+body.theme-light .card .contradiction {
+    color: #C62828;
+    background: rgba(198, 40, 40, 0.05);
+    border-color: rgba(198, 40, 40, 0.12);
+}
+
+.card .scenarios {
+    font-size: 14px;
+    color: var(--text-color);
+    padding: 10px 14px;
+    background: rgba(var(--accent-rgb), 0.04);
+    border-left: 3px solid var(--accent-color);
+    border-radius: 4px;
+    margin: 10px 0;
+    line-height: 1.7;
+}
 
 /* ── Brief card ── */
 .card-brief {
@@ -352,11 +402,19 @@ footer p {
 .keywords-footer span {
     padding: 4px 12px;
     border-radius: 20px;
-    background: rgba(66, 165, 245, 0.08);
-    border: 1px solid rgba(66, 165, 245, 0.15);
+    background: rgba(var(--accent-rgb), 0.08);
+    border: 1px solid rgba(var(--accent-rgb), 0.15);
     color: var(--accent-color);
     font-size: 12px;
     font-weight: 500;
+}
+
+/* ── Theme badge ── */
+.theme-badge {
+    font-size: 11px;
+    color: var(--secondary-color);
+    opacity: 0.5;
+    margin-top: 8px;
 }
 
 /* ── Animation ── */
@@ -371,6 +429,43 @@ footer p {
 .card:nth-child(4) { animation-delay: 0.2s; }
 .card:nth-child(5) { animation-delay: 0.25s; }
 
+/* ── Light theme overrides ── */
+body.theme-light .background-glow {
+    opacity: 0.4;
+}
+
+body.theme-light .background-glow-2 {
+    opacity: 0.3;
+}
+
+body.theme-light .geometric-lines {
+    opacity: 0.06;
+}
+
+body.theme-light .summary-card ol li {
+    border-bottom-color: rgba(0,0,0,0.06);
+}
+
+body.theme-light .section-header {
+    border-bottom-color: rgba(0,0,0,0.10);
+}
+
+body.theme-light .card:hover {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+
+body.theme-light .card .sources {
+    border-top-color: rgba(0,0,0,0.08);
+}
+
+body.theme-light footer {
+    border-top-color: rgba(0,0,0,0.10);
+}
+
+body.theme-light .section-dot {
+    box-shadow: 0 0 6px currentColor;
+}
+
 /* ── Responsive ── */
 @media (max-width: 480px) {
     .container { padding: 20px 14px 40px; }
@@ -380,9 +475,10 @@ footer p {
     .summary-card { padding: 20px; }
     .section-header h2 { font-size: 19px; }
 }
-</style>
+
+  </style>
 </head>
-<body>
+<body class="theme-light">
   <div class="background-glow"></div>
   <div class="background-glow-2"></div>
   <div class="geometric-lines"></div>
@@ -412,13 +508,13 @@ footer p {
   </div>
   <article class="card card-major" style="--section-color:#42A5F5">
   <h3>Brent原油創史上最大單月漲幅、WTI破$100 — 胡塞武裝加入戰局，衝突擴散至多條戰線</h3>
-  <p class="label">發生什麼事</p><p class="body">葉門胡塞武裝3月30日向以色列發射飛彈，為美以對伊朗開戰以來首次介入。Brent創史上最大單月漲幅，WTI收於$100以上（2022年以來首次）。以色列海法煉油廠遭飛彈攻擊起火，伊朗攻擊科威特電力與海水淡化設施，鋁價飆至2022年高點。油市進入backwardation結構（近月高於遠月），$150看漲期權部位較一個月前暴增逾七倍。</p><p class="label">為什麼重要</p><p class="body">胡塞介入使衝突從荷莫茲單一瓶頸擴散至紅海多戰線，backwardation結構意味市場開始定價長期物理供給缺口。紅海佔全球12%貨運量，若胡塞持續攻擊商船，海運保險費率將再疊一層風險溢價。</p>
+  <p class="label">發生什麼事</p><p class="body">葉門胡塞武裝3月30日向以色列發射飛彈，為美以對伊朗開戰以來首次介入。Brent創史上最大單月漲幅，WTI收於$100以上（2022年以來首次）。以色列海法煉油廠遭飛彈攻擊起火，伊朗攻擊科威特電力與海水淡化設施，鋁價飆至2022年高點。油市進入backwardation結構（近月高於遠月），$150看漲期權部位較一個月前暴增逾七倍。</p>
   <div class="interview-angle">💡 面試角度：對開發資本基建投資，LNG長約和海運基建的IRR假設需同時壓測『荷莫茲+紅海雙封鎖』情境，而非僅考慮單一瓶頸解除。</div>
   <div class="sources"><a href="https://www.cnbc.com/2026/03/30/oil-price-today-wti-brent-yemen-houthis-israel-iran-war.html" target="_blank">CNBC</a> ｜ <a href="https://www.aljazeera.com/news/2026/3/30/fire-contained-after-missile-attack-on-oil-refinery-in-israels-haifa" target="_blank">Al Jazeera</a> ｜ <a href="https://www.ft.com/content/11904ce7-332d-4770-802f-9a0a08b7cfd9" target="_blank">FT</a></div>
 </article>
 <article class="card card-major" style="--section-color:#42A5F5">
   <h3>Powell：通膨展望可控、油價衝擊無需升息 — Morgan Stanley稱股市修正接近尾聲</h3>
-  <p class="label">發生什麼事</p><p class="body">Fed主席Powell在哈佛演講表示通膨展望可控，油價衝擊不構成升息理由，私人信貸市場未現更廣泛危機。Morgan Stanley分析師Wilson稱市場已定價「油供受限但不致衰退」情境，股市修正接近完成。前白宮經濟顧問Goodspeed則警告「能源衝擊正是衰退核心驅動因素」。</p><p class="label">為什麼重要</p><p class="body">Powell的transitory 2.0判斷若被Q2 PCE數據推翻（油價→運輸→食品→核心CPI傳導滯後2-3個月），Fed敘事將被迫轉向，股市面臨雙底風險。</p>
+  <p class="label">發生什麼事</p><p class="body">Fed主席Powell在哈佛演講表示通膨展望可控，油價衝擊不構成升息理由，私人信貸市場未現更廣泛危機。Morgan Stanley分析師Wilson稱市場已定價「油供受限但不致衰退」情境，股市修正接近完成。前白宮經濟顧問Goodspeed則警告「能源衝擊正是衰退核心驅動因素」。</p>
   <div class="interview-angle">💡 面試角度：財務管理MA的NIM壓力測試需同時建模『Fed按兵不動』和『被迫升息1碼』兩個情境。</div>
   <div class="sources"><a href="https://www.cnbc.com/2026/03/30/powell-sees-inflation-outlook-in-check-no-wider-crisis-yet-in-private-credit.html" target="_blank">CNBC</a> ｜ <a href="https://www.cnbc.com/2026/03/30/morgan-stanley-says-to-watch-rates-as-stock-correction-is-almost-over.html" target="_blank">CNBC</a> ｜ <a href="https://www.cnbc.com/2026/03/30/recession-economy-trump-white-house-economist.html" target="_blank">CNBC</a></div>
 </article>
@@ -435,13 +531,13 @@ footer p {
   </div>
   <article class="card card-major" style="--section-color:#AB47BC">
   <h3>川普開放401(k)退休金投資另類資產 — 美國$7兆退休金體系結構性轉折</h3>
-  <p class="label">發生什麼事</p><p class="body">美國勞工部提出規則，允許401(k)計畫納入PE、加密貨幣及不動產。約$7兆401(k)資金池將部分流入另類資產市場。Bill Ackman同日稱「現在是長期以來買進優質股票的最佳時機」。</p><p class="label">為什麼重要</p><p class="body">此規則將擴大PE的LP基礎，改善募資環境；但401(k)受益人的贖回靈活性需求與PE 3-7年鎖定期的結構性矛盾，是監管設計核心難題。</p>
+  <p class="label">發生什麼事</p><p class="body">美國勞工部提出規則，允許401(k)計畫納入PE、加密貨幣及不動產。約$7兆401(k)資金池將部分流入另類資產市場。Bill Ackman同日稱「現在是長期以來買進優質股票的最佳時機」。</p>
   <div class="interview-angle">💡 面試角度：對國泰CIM，美國PE募資環境中期改善，但退休金LP的贖回條款設計將成為投資結構談判的新變數。</div>
   <div class="sources"><a href="https://www.cnbc.com/2026/03/30/401ks-alternative-investments.html" target="_blank">CNBC</a> ｜ <a href="https://www.ft.com/content/f38575bf-7d7e-41a8-ae77-6e25c44de3a2" target="_blank">FT</a></div>
 </article>
 <article class="card card-major" style="--section-color:#AB47BC">
   <h3>Fermi資料中心地產暴跌13%（淨損$4.86億）+ 困境債基金瞄準「2008年以來最大機會」</h3>
-  <p class="label">發生什麼事</p><p class="body">Fermi公布$4.86億淨虧損，投資人擔憂缺乏租戶營收。FT報導困境債基金（Oaktree、Ares等）正大規模布局私人信貸下行，稱之為自2008年以來最大獲利機會，積極募資以低價收購壓力資產。</p><p class="label">為什麼重要</p><p class="body">高利率環境下資本密集型不動產與基建項目面臨再融資壓力，部分高槓桿資料中心開發商開始出現財務困難，但這對逆週期投資者是布局窗口。</p>
+  <p class="label">發生什麼事</p><p class="body">Fermi公布$4.86億淨虧損，投資人擔憂缺乏租戶營收。FT報導困境債基金（Oaktree、Ares等）正大規模布局私人信貸下行，稱之為自2008年以來最大獲利機會，積極募資以低價收購壓力資產。</p>
   <div class="interview-angle">💡 面試角度：對國泰CIM，需區分『建設期暫時虧損』和『結構性商業模式問題』，困境資產投資的關鍵是判斷資產品質而非追逐折價。</div>
   <div class="sources"><a href="https://www.ft.com/content/49a8b5c8-d655-4eb8-b0dc-6bd403860925" target="_blank">FT</a> ｜ <a href="https://www.ft.com/content/8c3514be-8c7b-4d13-a59a-dd8a23fb8c40" target="_blank">FT</a></div>
 </article>
@@ -458,13 +554,13 @@ footer p {
   </div>
   <article class="card card-major" style="--section-color:#66BB6A">
   <h3>Micron財報後累跌30% — EPS超預期30%但DDR現貨鬆動引爆記憶體多空論戰</h3>
-  <p class="label">發生什麼事</p><p class="body">Micron 3月30日再跌10%，自3/18超預期財報以來累跌約30%。DDR4與部分DDR5現貨報價鬆動。多方：HBM合約鎖倉+AI邊緣推論需求。空方：油價衝擊CSP capex、DeepSeek類低算力模型侵蝕需求、DDR現貨鬆動為週期見頂先兆。花旗同日升台積電目標價至2,800元。</p><p class="label">為什麼重要</p><p class="body">「業績好但股價差」的背離，核心是市場在定價DDR現貨鬆動暗示的庫存週期見頂，還是伊朗戰爭推升的能源成本將壓縮CSP capex。HBM客製化合約與傳統標準品現貨是否脫鉤，是估值關鍵。</p>
+  <p class="label">發生什麼事</p><p class="body">Micron 3月30日再跌10%，自3/18超預期財報以來累跌約30%。DDR4與部分DDR5現貨報價鬆動。多方：HBM合約鎖倉+AI邊緣推論需求。空方：油價衝擊CSP capex、DeepSeek類低算力模型侵蝕需求、DDR現貨鬆動為週期見頂先兆。花旗同日升台積電目標價至2,800元。</p>
   <div class="interview-angle">💡 面試角度：對國泰CIM評估記憶體供應鏈PE投資，DeepSeek類模型效率提升是binary risk而非可用DCF線性建模的風險。</div>
   <div class="sources"><a href="https://www.cnbc.com/2026/03/30/micron-stock-earnings-sell-off-memory-shortage.html" target="_blank">CNBC</a> ｜ <a href="https://money.udn.com/money/story/5607/9412680" target="_blank">經濟日報</a></div>
 </article>
 <article class="card card-major" style="--section-color:#66BB6A">
   <h3>SpaceX IPO在即 — E*Trade洽談領導零售投資人認購，史上最大規模IPO成形</h3>
-  <p class="label">發生什麼事</p><p class="body">E*Trade正與SpaceX洽談向美國零售投資人銷售IPO股份，估值約$3,500億，Starlink為主要營收驅動。此IPO可能帶動Stripe、Databricks等獨角獸跟進上市的窗口效應。</p><p class="label">為什麼重要</p><p class="body">若成功以$3,500億估值上市，將驗證高估值科技獨角獸的公開市場退出路徑暢通，對PE投資組合退出規劃是重要市場信號。</p>
+  <p class="label">發生什麼事</p><p class="body">E*Trade正與SpaceX洽談向美國零售投資人銷售IPO股份，估值約$3,500億，Starlink為主要營收驅動。此IPO可能帶動Stripe、Databricks等獨角獸跟進上市的窗口效應。</p>
   <div class="interview-angle">💡 面試角度：對元大投行，SpaceX帶動的IPO窗口效應可能在Q2/Q3催生一波跨境ECM機會。</div>
   <div class="sources"><a href="https://www.cnbc.com/2026/03/30/etrade-in-talks-to-lead-spacex-ipo-share-sale-to-small-us-investors.html" target="_blank">CNBC</a></div>
 </article>
@@ -485,7 +581,7 @@ footer p {
   </div>
   <article class="card card-major" style="--section-color:#FFA726">
   <h3>Golden Pass LNG廠投產 — 伊朗戰爭下全球LNG供應鏈重構加速</h3>
-  <p class="label">發生什麼事</p><p class="body">QatarEnergy與ExxonMobil合資的美國Golden Pass LNG廠正式投產，年處理能力約1,800萬噸。投產時機恰逢荷莫茲封鎖導致卡達本土LNG出口受阻。中國供應商警告美國買家價格將上升，印度警告經濟增長放緩、赤字擴大，英國本週收到最後一批中東航空燃油。</p><p class="label">為什麼重要</p><p class="body">1,800萬噸年產能僅佔全球需求約4%，結構性缺口仍需多個項目同步推進。各國加速布局非中東LNG來源（美國Gulf Coast、澳洲、莫三比克）。</p>
+  <p class="label">發生什麼事</p><p class="body">QatarEnergy與ExxonMobil合資的美國Golden Pass LNG廠正式投產，年處理能力約1,800萬噸。投產時機恰逢荷莫茲封鎖導致卡達本土LNG出口受阻。中國供應商警告美國買家價格將上升，印度警告經濟增長放緩、赤字擴大，英國本週收到最後一批中東航空燃油。</p>
   <div class="interview-angle">💡 面試角度：LNG接收站和再氣化設施的IRR在荷莫茲長期封鎖情境下將獲得顯著提升，是當前最確定的基建投資主題之一。</div>
   <div class="sources"><a href="https://www.ft.com/content/318bd673-f2fe-4417-89b7-d6553a696f86" target="_blank">FT</a> ｜ <a href="https://www.cnbc.com/2026/03/30/india-flags-slower-growth-wider-deficit-iran-war.html" target="_blank">CNBC</a> ｜ <a href="https://www.ft.com/content/19f155b1-8b12-491a-bbc5-a3bdb2a2e607" target="_blank">FT</a></div>
 </article>
@@ -508,7 +604,7 @@ footer p {
   </div>
   <article class="card card-major" style="--section-color:#EF5350">
   <h3>台股失守33,000點 — 央行總裁楊金龍：油價$100則CPI升至1.9%，不排除升息</h3>
-  <p class="label">發生什麼事</p><p class="body">台股3月30日大跌594點收32,518點，失守33K。外資單日賣超639.3億元，恐慌指數一度衝高至近40%，台積電跌破季線。央行總裁楊金龍表示若全年平均油價升至每桶$100，國內CPI可能升至1.9%，不排除升息。法人預估指數將在月線與季線間震盪。</p><p class="label">為什麼重要</p><p class="body">楊金龍的CPI 1.9%估算基於「全年平均油價$100」，但WTI已破$100且$150看漲期權暴增七倍，若下半年油價中樞$110-120，CPI可能超2%觸發升息。央行面臨「抗通膨升息」與「護匯」雙重壓力。</p>
+  <p class="label">發生什麼事</p><p class="body">台股3月30日大跌594點收32,518點，失守33K。外資單日賣超639.3億元，恐慌指數一度衝高至近40%，台積電跌破季線。央行總裁楊金龍表示若全年平均油價升至每桶$100，國內CPI可能升至1.9%，不排除升息。法人預估指數將在月線與季線間震盪。</p>
   <div class="interview-angle">💡 面試角度：對中信財務管理MA，需同時壓測升息0bp/12.5bp/25bp三種情境下的NIM變動和房貸資產品質影響。</div>
   <div class="sources"><a href="https://money.udn.com/money/story/5607/9412899" target="_blank">經濟日報</a> ｜ <a href="https://money.udn.com/money/story/5607/9412777" target="_blank">經濟日報</a> ｜ <a href="https://money.udn.com/money/story/5607/9412417" target="_blank">經濟日報</a></div>
 </article>
@@ -534,6 +630,7 @@ footer p {
       <p>由 Claude 分析產出 · MA 面試準備用</p>
       <p>RSS: CNBC · BBC · FT · WSJ · Al Jazeera · Yahoo Finance · 經濟日報 · TechCrunch</p>
       <div class="keywords-footer"><span>#Fed</span><span>#油價</span><span>#台股</span><span>#AI</span><span>#TSMC</span><span>#Micron</span><span>#LNG</span><span>#荷莫茲</span><span>#SpaceX</span><span>#PE</span></div>
+      <p class="theme-badge">Theme: Light 清新白</p>
     </footer>
   </div>
 </body>

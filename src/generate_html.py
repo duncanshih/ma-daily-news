@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """
-MA 時事日報 — HTML 生成器（Apple Style Theme）
-讀取 Claude 產出的 JSON 分析結果，生成蘋果風自包含 HTML。
-設計參考：geekjourneyx/ai-daily-skill Apple Style Theme
+MA 時事日報 — HTML 生成器（多主題版）
+讀取 Claude 產出的 JSON 分析結果，生成自包含 HTML。
+支援 3 種主題：apple（預設）、ocean、autumn
+設計參考：geekjourneyx/ai-daily-skill
 """
 
 import json
@@ -18,22 +19,102 @@ SECTION_COLORS = {
     "taiwan": {"name": "台灣 / 亞太", "color": "#EF5350", "icon": "🇹🇼"},
 }
 
-APPLE_THEME_CSS = """
-:root {
-    --bg-color: #000000;
-    --glow-start: #0A1929;
-    --glow-end: #1A3A52;
-    --title-color: #FFFFFF;
-    --text-color: #E3F2FD;
-    --accent-color: #42A5F5;
-    --secondary-color: #B0BEC5;
-    --surface: rgba(255, 255, 255, 0.05);
-    --surface-hover: rgba(255, 255, 255, 0.08);
-    --border: rgba(255, 255, 255, 0.10);
-    --border-hover: rgba(255, 255, 255, 0.20);
-    --interview: #FFA726;
+# ══════════════════════════════════════════
+#  Theme Definitions
+# ══════════════════════════════════════════
+
+THEMES = {
+    "apple": {
+        "label": "Apple Style",
+        "vars": {
+            "bg-color": "#000000",
+            "glow-start": "#0A1929",
+            "glow-end": "#1A3A52",
+            "title-color": "#FFFFFF",
+            "text-color": "#E3F2FD",
+            "accent-color": "#42A5F5",
+            "accent-rgb": "66, 165, 245",
+            "secondary-color": "#B0BEC5",
+            "surface": "rgba(255, 255, 255, 0.05)",
+            "surface-hover": "rgba(255, 255, 255, 0.08)",
+            "border": "rgba(255, 255, 255, 0.10)",
+            "border-hover": "rgba(255, 255, 255, 0.20)",
+            "interview": "#FFA726",
+            "interview-rgb": "255, 167, 38",
+        },
+    },
+    "ocean": {
+        "label": "Ocean Calm 深海藍",
+        "vars": {
+            "bg-color": "#060E1A",
+            "glow-start": "#0F1C3F",
+            "glow-end": "#1A2F5A",
+            "title-color": "#E8EDF3",
+            "text-color": "#C5D0DC",
+            "accent-color": "#5C9FE5",
+            "accent-rgb": "92, 159, 229",
+            "secondary-color": "#8A9BB0",
+            "surface": "rgba(92, 159, 229, 0.06)",
+            "surface-hover": "rgba(92, 159, 229, 0.10)",
+            "border": "rgba(92, 159, 229, 0.12)",
+            "border-hover": "rgba(92, 159, 229, 0.25)",
+            "interview": "#64B5F6",
+            "interview-rgb": "100, 181, 246",
+        },
+    },
+    "autumn": {
+        "label": "Autumn Warm 秋日暖陽",
+        "vars": {
+            "bg-color": "#0D0906",
+            "glow-start": "#1F1410",
+            "glow-end": "#3D2415",
+            "title-color": "#F5E6D3",
+            "text-color": "#D4C4B0",
+            "accent-color": "#FFA726",
+            "accent-rgb": "255, 167, 38",
+            "secondary-color": "#A89585",
+            "surface": "rgba(255, 167, 38, 0.05)",
+            "surface-hover": "rgba(255, 167, 38, 0.09)",
+            "border": "rgba(255, 167, 38, 0.10)",
+            "border-hover": "rgba(255, 167, 38, 0.22)",
+            "interview": "#FFD54F",
+            "interview-rgb": "255, 213, 79",
+        },
+    },
+    "light": {
+        "label": "Light 清新白",
+        "vars": {
+            "bg-color": "#FFFFFF",
+            "glow-start": "#E8F0FE",
+            "glow-end": "#D2E3FC",
+            "title-color": "#1A1A1A",
+            "text-color": "#333333",
+            "accent-color": "#1A73E8",
+            "accent-rgb": "26, 115, 232",
+            "secondary-color": "#5F6368",
+            "surface": "rgba(0, 0, 0, 0.03)",
+            "surface-hover": "rgba(0, 0, 0, 0.06)",
+            "border": "rgba(0, 0, 0, 0.10)",
+            "border-hover": "rgba(26, 115, 232, 0.30)",
+            "interview": "#E8710A",
+            "interview-rgb": "232, 113, 10",
+        },
+    },
 }
 
+AVAILABLE_THEMES = list(THEMES.keys())
+
+
+def _build_css_vars(theme_name: str) -> str:
+    """Build CSS :root block from theme variables."""
+    t = THEMES.get(theme_name, THEMES["apple"])
+    lines = []
+    for k, v in t["vars"].items():
+        lines.append(f"    --{k}: {v};")
+    return ":root {\n" + "\n".join(lines) + "\n}"
+
+
+BASE_CSS = """
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
@@ -74,7 +155,7 @@ body {
     height: 50%;
     background: radial-gradient(
         circle at center,
-        rgba(66, 165, 245, 0.08) 0%,
+        rgba(var(--accent-rgb), 0.08) 0%,
         transparent 70%
     );
     filter: blur(60px);
@@ -116,15 +197,15 @@ header {
     width: 64px;
     height: 64px;
     border-radius: 20px;
-    background: rgba(66, 165, 245, 0.15);
+    background: rgba(var(--accent-rgb), 0.15);
     font-size: 32px;
     margin-bottom: 20px;
     animation: glow-pulse 3s ease-in-out infinite;
 }
 
 @keyframes glow-pulse {
-    0%, 100% { box-shadow: 0 0 30px rgba(66,165,245,0.3), 0 0 60px rgba(66,165,245,0.1); }
-    50% { box-shadow: 0 0 40px rgba(66,165,245,0.5), 0 0 80px rgba(66,165,245,0.2); }
+    0%, 100% { box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.3), 0 0 60px rgba(var(--accent-rgb), 0.1); }
+    50% { box-shadow: 0 0 40px rgba(var(--accent-rgb), 0.5), 0 0 80px rgba(var(--accent-rgb), 0.2); }
 }
 
 header h1 {
@@ -139,8 +220,8 @@ header h1 {
     display: inline-block;
     padding: 6px 16px;
     border-radius: 20px;
-    background: rgba(66, 165, 245, 0.12);
-    border: 1px solid rgba(66, 165, 245, 0.2);
+    background: rgba(var(--accent-rgb), 0.12);
+    border: 1px solid rgba(var(--accent-rgb), 0.2);
     color: var(--accent-color);
     font-size: 15px;
     font-weight: 500;
@@ -201,7 +282,7 @@ header h1 {
     min-width: 26px;
     height: 26px;
     background: var(--accent-color);
-    color: #000;
+    color: var(--bg-color);
     border-radius: 50%;
     font-size: 13px;
     font-weight: 700;
@@ -303,8 +384,8 @@ header h1 {
     font-size: 14px;
     color: var(--interview);
     padding: 10px 14px;
-    background: rgba(255, 167, 38, 0.08);
-    border: 1px solid rgba(255, 167, 38, 0.15);
+    background: rgba(var(--interview-rgb), 0.08);
+    border: 1px solid rgba(var(--interview-rgb), 0.15);
     border-radius: 10px;
     margin: 14px 0;
     line-height: 1.6;
@@ -325,6 +406,54 @@ header h1 {
 }
 
 .card .sources a:hover { opacity: 0.7; }
+
+/* ── Analysis framework fields ── */
+.card .transmission {
+    font-size: 14px;
+    color: var(--accent-color);
+    padding: 10px 14px;
+    background: rgba(var(--accent-rgb), 0.06);
+    border: 1px solid rgba(var(--accent-rgb), 0.12);
+    border-radius: 10px;
+    margin: 10px 0;
+    line-height: 1.6;
+    font-weight: 500;
+}
+
+.card .structural-tag {
+    font-size: 13px;
+    color: var(--secondary-color);
+    margin: 8px 0;
+    line-height: 1.5;
+}
+
+.card .contradiction {
+    font-size: 14px;
+    color: #E53935;
+    padding: 8px 14px;
+    background: rgba(229, 57, 53, 0.06);
+    border: 1px solid rgba(229, 57, 53, 0.12);
+    border-radius: 10px;
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+body.theme-light .card .contradiction {
+    color: #C62828;
+    background: rgba(198, 40, 40, 0.05);
+    border-color: rgba(198, 40, 40, 0.12);
+}
+
+.card .scenarios {
+    font-size: 14px;
+    color: var(--text-color);
+    padding: 10px 14px;
+    background: rgba(var(--accent-rgb), 0.04);
+    border-left: 3px solid var(--accent-color);
+    border-radius: 4px;
+    margin: 10px 0;
+    line-height: 1.7;
+}
 
 /* ── Brief card ── */
 .card-brief {
@@ -366,11 +495,19 @@ footer p {
 .keywords-footer span {
     padding: 4px 12px;
     border-radius: 20px;
-    background: rgba(66, 165, 245, 0.08);
-    border: 1px solid rgba(66, 165, 245, 0.15);
+    background: rgba(var(--accent-rgb), 0.08);
+    border: 1px solid rgba(var(--accent-rgb), 0.15);
     color: var(--accent-color);
     font-size: 12px;
     font-weight: 500;
+}
+
+/* ── Theme badge ── */
+.theme-badge {
+    font-size: 11px;
+    color: var(--secondary-color);
+    opacity: 0.5;
+    margin-top: 8px;
 }
 
 /* ── Animation ── */
@@ -385,6 +522,43 @@ footer p {
 .card:nth-child(4) { animation-delay: 0.2s; }
 .card:nth-child(5) { animation-delay: 0.25s; }
 
+/* ── Light theme overrides ── */
+body.theme-light .background-glow {
+    opacity: 0.4;
+}
+
+body.theme-light .background-glow-2 {
+    opacity: 0.3;
+}
+
+body.theme-light .geometric-lines {
+    opacity: 0.06;
+}
+
+body.theme-light .summary-card ol li {
+    border-bottom-color: rgba(0,0,0,0.06);
+}
+
+body.theme-light .section-header {
+    border-bottom-color: rgba(0,0,0,0.10);
+}
+
+body.theme-light .card:hover {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+
+body.theme-light .card .sources {
+    border-top-color: rgba(0,0,0,0.08);
+}
+
+body.theme-light footer {
+    border-top-color: rgba(0,0,0,0.10);
+}
+
+body.theme-light .section-dot {
+    box-shadow: 0 0 6px currentColor;
+}
+
 /* ── Responsive ── */
 @media (max-width: 480px) {
     .container { padding: 20px 14px 40px; }
@@ -397,7 +571,19 @@ footer p {
 """
 
 
-def generate_html(analysis_json: dict) -> str:
+def generate_html(analysis_json: dict, theme: str = "light") -> str:
+    """Generate self-contained HTML from analysis JSON.
+
+    Args:
+        analysis_json: The structured analysis data.
+        theme: One of 'apple', 'ocean', 'autumn'. Defaults to 'apple'.
+    """
+    if theme not in THEMES:
+        theme = "apple"
+
+    theme_info = THEMES[theme]
+    css_vars = _build_css_vars(theme)
+
     date = analysis_json.get("date", "")
     day = analysis_json.get("day_of_week", "")
     total = analysis_json.get("total_articles", 0)
@@ -434,17 +620,26 @@ def generate_html(analysis_json: dict) -> str:
                     tracking = "🔄 "
 
                 what = art.get("what_happened", art.get("latest_development", ""))
-                why = art.get("why_important", "")
                 angle = art.get("interview_angle", "")
                 key_data = art.get("key_data", "")
+                transmission = art.get("transmission", "")
+                structural = art.get("structural_or_cyclical", "")
+                contradiction = art.get("contradiction", "")
+                scenarios = art.get("scenarios", "")
 
                 body_parts = []
                 if what:
                     body_parts.append(f'<p class="label">發生什麼事</p><p class="body">{what}</p>')
                 if key_data:
                     body_parts.append(f'<p class="label">關鍵數據</p><p class="body">{key_data}</p>')
-                if why:
-                    body_parts.append(f'<p class="label">為什麼重要</p><p class="body">{why}</p>')
+                if transmission:
+                    body_parts.append(f'<div class="transmission">🔗 {transmission}</div>')
+                if structural:
+                    body_parts.append(f'<div class="structural-tag">{"🏗️ 結構性" if "結構" in structural else "🔄 週期性"} — {structural}</div>')
+                if contradiction:
+                    body_parts.append(f'<div class="contradiction">⚡ 矛盾訊號：{contradiction}</div>')
+                if scenarios:
+                    body_parts.append(f'<div class="scenarios">🔀 {scenarios}</div>')
 
                 angle_html = ""
                 if angle:
@@ -483,9 +678,12 @@ def generate_html(analysis_json: dict) -> str:
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MA 時事日報 — {date}</title>
-  <style>{APPLE_THEME_CSS}</style>
+  <style>
+{css_vars}
+{BASE_CSS}
+  </style>
 </head>
-<body>
+<body class="{"theme-light" if theme == "light" else ""}">
   <div class="background-glow"></div>
   <div class="background-glow-2"></div>
   <div class="geometric-lines"></div>
@@ -509,6 +707,7 @@ def generate_html(analysis_json: dict) -> str:
       <p>由 Claude 分析產出 · MA 面試準備用</p>
       <p>RSS: CNBC · BBC · FT · WSJ · Al Jazeera · Yahoo Finance · 經濟日報 · TechCrunch</p>
       <div class="keywords-footer">{keywords_html}</div>
+      <p class="theme-badge">Theme: {theme_info['label']}</p>
     </footer>
   </div>
 </body>
@@ -523,9 +722,23 @@ def _hex_to_rgb(hex_color: str) -> str:
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        with open(sys.argv[1], "r", encoding="utf-8") as f:
+    import io
+    if sys.stdout.encoding != "utf-8":
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+
+    theme = "apple"
+    filepath = None
+
+    for arg in sys.argv[1:]:
+        if arg.startswith("--theme="):
+            theme = arg.split("=", 1)[1]
+        elif not arg.startswith("-"):
+            filepath = arg
+
+    if filepath:
+        with open(filepath, "r", encoding="utf-8") as f:
             data = json.load(f)
     else:
         data = json.load(sys.stdin)
-    print(generate_html(data))
+
+    print(generate_html(data, theme=theme))
