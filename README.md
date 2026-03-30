@@ -1,41 +1,60 @@
 # MA 時事日報
 
-自動化的金融業 MA 面試時事新聞系統。每天從 19 個 RSS 來源抓取財經新聞，透過 Claude AI 分析篩選，產出蘋果風格的 HTML 日報。
+金融業 MA 面試時事新聞系統。從 19 個 RSS 來源抓取財經新聞，透過 Claude 分析篩選，產出蘋果風格的 HTML 日報。
+
+**不需要 API Key** — 全部在本機跑，分析步驟用你的 Claude 訂閱（桌面版或 claude.ai）。
 
 ## 快速開始
 
-### 1. Clone & 安裝
+### 1. 安裝
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/ma-daily-news.git
+git clone https://github.com/duncanshih/ma-daily-news.git
 cd ma-daily-news
 pip install -r requirements.txt
 ```
 
-### 2. 設定 API Key
-
-```bash
-cp .env.example .env
-# 編輯 .env，填入你的 Anthropic API Key
-```
-
-### 3. 手動執行一次
+### 2. 每日使用（3 步驟）
 
 ```bash
 cd src
+
+# Step 1: 抓 RSS + 產生 prompt（自動複製到剪貼簿）
+python main.py fetch
+
+# Step 2: 打開 Claude 桌面版 → Ctrl+V 貼上 → 等回覆 JSON
+
+# Step 3: 回來產生 HTML（會請你貼回 JSON）
+python main.py generate
+```
+
+或一次跑完整互動流程：
+
+```bash
 python main.py
 ```
 
-產出的 HTML 會在 `docs/` 資料夾。
+### 3. 部署到 GitHub Pages
 
-### 4. 設定 GitHub Actions 自動化
+```bash
+git add docs/
+git commit -m "📰 Daily news $(date +%Y-%m-%d)"
+git push
+```
 
-1. 到 repo 的 Settings → Secrets and variables → Actions
-2. 新增 secret: `ANTHROPIC_API_KEY`
-3. 到 Settings → Pages → Source 選 "GitHub Actions"
-4. 完成！每天台灣時間 09:00 自動執行
+Push 後 GitHub Actions 會自動部署到 Pages。
 
-## RSS 來源
+## CLI 指令
+
+| 指令 | 說明 |
+|------|------|
+| `python main.py` | 完整互動流程 |
+| `python main.py fetch` | 只抓 RSS + 複製 prompt |
+| `python main.py generate` | 貼回 JSON → 產出 HTML |
+| `python main.py generate FILE` | 從檔案讀取 JSON → 產出 HTML |
+| `python main.py help` | 顯示說明 |
+
+## RSS 來源（19 個）
 
 | 來源 | 類型 | 語言 |
 |------|------|------|
@@ -54,13 +73,15 @@ python main.py
 ```
 ma-daily-news/
 ├── src/
-│   ├── main.py              # 主入口
+│   ├── main.py              # 主入口（3 步驟 CLI）
 │   ├── fetch_news.py         # RSS 抓取
-│   ├── analyze_news.py       # Claude AI 分析
 │   └── generate_html.py      # HTML 生成（蘋果風主題）
-├── docs/                     # 產出的 HTML（GitHub Pages 來源）
+├── data/                     # 暫存資料（.gitignore）
+│   ├── rss_raw_YYYY-MM-DD.json
+│   ├── prompt_YYYY-MM-DD.txt
+│   └── analysis_YYYY-MM-DD.json
+├── docs/                     # 產出的 HTML（GitHub Pages）
 ├── .github/workflows/
-│   └── daily-news.yml        # GitHub Actions 自動化
-├── requirements.txt
-└── .env.example
+│   └── daily-news.yml        # Pages 自動部署
+└── requirements.txt
 ```

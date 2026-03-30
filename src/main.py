@@ -1,71 +1,203 @@
 #!/usr/bin/env python3
 """
-MA 時事日報 — 主入口
-完整流程：RSS 抓取 → Claude 分析 → HTML 生成 → 儲存
+MA 時事日報 — 主入口（本機版，不需 API Key）
+
+流程：
+  1. python main.py fetch    → 抓 RSS，存 JSON，複製 prompt 到剪貼簿
+  2. 你貼進 Claude 桌面版   → 拿到分析 JSON
+  3. python main.py generate → 貼回 JSON 或指定檔案 → 產出 HTML
+
+或直接 python main.py 跑完整互動流程。
 """
 
 import json
 import os
+import subprocess
+import platform
 import sys
 from datetime import datetime
 from pathlib import Path
 
 from fetch_news import fetch_all_feeds
-from analyze_news import analyze_with_claude
 from generate_html import generate_html
 
+# ── 資料夾 ──
+ROOT_DIR = Path(__file__).parent.parent
+DATA_DIR = ROOT_DIR / "data"
+DOCS_DIR = ROOT_DIR / "docs"
 
-def main():
-    today = datetime.now().strftime("%Y-%m-%d")
-    print(f"=== MA 時事日報 — {today} ===\n")
+# ── Claude 分析 Prompt（從原 analyze_news.py 搬過來）──
+ANALYSIS_PROMPT = """你是一位專為台灣金融業 MA（儲備幹部）面試準備的時事新聞研究員。
 
-    # Step 1: Fetch RSS
-    print("[1/4] 抓取 RSS 新聞...")
-    rss_data = fetch_all_feeds()
-    stats = rss_data["stats"]
-    print(f"  ✅ 抓取完成：{stats['total']} 則，來自 {len(stats['by_source'])} 個來源")
-    if stats["errors"]:
-        print(f"  ⚠️  失敗來源：{', '.join(stats['errors'])}")
+我給你今天從 RSS 抓到的原始新聞列表（JSON 格式）。請你：
 
-    # Step 2: Analyze with Claude
-    print("\n[2/4] Claude 分析中...")
-    analysis = analyze_with_claude(rss_data)
-    total = analysis.get("total_articles", 0)
-    print(f"  ✅ 分析完成：{total} 則精選新聞")
+1. 從中篩選出最重要的 15-20 則新聞
+2. 分類到 5 個版塊：macro（總經/地緣政治）、realestate（不動產/私募）、tech（AI/半導體）、energy（能源/基建）、taiwan（台灣/亞太）
+3. 每個版塊 3-5 則
+4. 每則新聞標記格式：A（重要新故事）、B（持續追蹤事件）、C（簡要更新）
 
-    # Step 3: Generate HTML
-    print("\n[3/4] 生成 HTML...")
-    html_content = generate_html(analysis)
-    print(f"  ✅ HTML 生成完成（{len(html_content):,} bytes）")
+篩選標準：
+- 有具體數字（匯率、股指、金額、百分比）
+- 有因果關係可分析
+- 跟 MA 面試可能被問到的主題相關
+- 有跨領域連結（例如油價 → 通膨 → 央行政策）
 
-    # Step 4: Save files
-    print("\n[4/4] 儲存檔案...")
-    docs_dir = Path(__file__).parent.parent / "docs"
-    docs_dir.mkdir(exist_ok=True)
+請用以下 JSON 格式回覆（不要加任何 markdown 標記，純 JSON）：
 
-    html_path = docs_dir / f"{today}.html"
-    json_path = docs_dir / f"{today}.json"
+{
+  "date": "YYYY-MM-DD",
+  "day_of_week": "星期X",
+  "total_articles": 18,
+  "source_count": 12,
+  "top5": [
+    {"section": "macro", "summary": "一句話摘要"},
+    {"section": "tech", "summary": "一句話摘要"},
+    {"section": "energy", "summary": "一句話摘要"},
+    {"section": "taiwan", "summary": "一句話摘要"},
+    {"section": "realestate", "summary": "一句話摘要"}
+  ],
+  "sections": {
+    "macro": {
+      "articles": [
+        {
+          "format": "A",
+          "title": "新聞標題 — 一句話總結",
+          "what_happened": "2-3 句話，包含具體數字",
+          "why_important": "1-2 句話，解釋影響",
+          "interview_angle": "1 句話，面試切入點",
+          "sources": [{"name": "來源名稱", "url": "https://..."}]
+        },
+        {
+          "format": "B",
+          "title": "事件名稱（持續追蹤）",
+          "latest_development": "今天的新發展",
+          "key_data": "2-3 個關鍵數字",
+          "sources": [{"name": "來源名稱", "url": "https://..."}]
+        },
+        {
+          "format": "C",
+          "title": "標題",
+          "summary": "一句話摘要，含關鍵數字",
+          "sources": [{"name": "來源名稱", "url": "https://..."}]
+        }
+      ]
+    },
+    "realestate": { "articles": [] },
+    "tech": { "articles": [] },
+    "energy": { "articles": [] },
+    "taiwan": { "articles": [] }
+  }
+}
 
-    html_path.write_text(html_content, encoding="utf-8")
-    json_path.write_text(json.dumps(analysis, ensure_ascii=False, indent=2), encoding="utf-8")
+品質要求：
+- 數字要精確（匯率精確到小數點後2位、百分比精確到小數點後1位）
+- 不要用「大幅」「顯著」等模糊詞
+- 「面試角度」要具體實用
+- 每則新聞的 sources 必須包含實際可訪問的 URL
+- 中文來源至少佔 30%（如果 RSS 中文來源不足，可以標注建議補充搜尋的關鍵字）
+"""
 
-    print(f"  ✅ HTML: {html_path}")
-    print(f"  ✅ JSON: {json_path}")
 
-    # Generate index.html (list of all reports)
-    generate_index(docs_dir)
+def copy_to_clipboard(text: str) -> bool:
+    """Copy text to system clipboard. Returns True on success."""
+    try:
+        if platform.system() == "Windows":
+            # clip.exe on Windows expects UTF-16LE via stdin
+            process = subprocess.Popen(
+                ["clip.exe"], stdin=subprocess.PIPE, shell=False
+            )
+            process.communicate(text.encode("utf-16le"))
+            return process.returncode == 0
+        elif platform.system() == "Darwin":
+            process = subprocess.Popen(
+                ["pbcopy"], stdin=subprocess.PIPE, shell=False
+            )
+            process.communicate(text.encode("utf-8"))
+            return process.returncode == 0
+        else:
+            # Linux: try xclip
+            process = subprocess.Popen(
+                ["xclip", "-selection", "clipboard"], stdin=subprocess.PIPE, shell=False
+            )
+            process.communicate(text.encode("utf-8"))
+            return process.returncode == 0
+    except Exception:
+        return False
 
-    # Summary
-    print(f"\n{'='*50}")
-    print(f"📊 完成摘要")
-    print(f"  日期：{today}")
-    print(f"  RSS 來源：{len(stats['by_source'])} 個成功 / {len(stats['errors'])} 個失敗")
-    print(f"  精選新聞：{total} 則")
-    print(f"  Top 5 必讀：")
-    for i, item in enumerate(analysis.get("top5", [])[:5], 1):
-        print(f"    {i}. [{item.get('section', '')}] {item.get('summary', '')}")
 
-    return 0
+def condense_articles(rss_data: dict) -> list:
+    """Condense RSS articles for the prompt (save tokens)."""
+    condensed = []
+    for art in rss_data.get("articles", []):
+        condensed.append({
+            "title": art["title"],
+            "link": art["link"],
+            "summary": art["summary"][:300],
+            "source": art["source_name"],
+            "category": art["category"],
+            "lang": art["lang"],
+        })
+    return condensed
+
+
+def build_prompt(rss_data: dict) -> str:
+    """Build the full prompt with RSS data embedded."""
+    condensed = condense_articles(rss_data)
+    user_msg = f"""以下是今天 {rss_data['date']} 從 RSS 抓到的 {len(condensed)} 則原始新聞：
+
+{json.dumps(condensed, ensure_ascii=False)}
+
+請按照指定格式分析並回覆 JSON。"""
+
+    return ANALYSIS_PROMPT + "\n\n" + user_msg
+
+
+def wait_for_analysis_json() -> dict:
+    """Wait for user to paste Claude's JSON response."""
+    print("\n" + "=" * 50)
+    print("📋 請將 Claude 回覆的 JSON 貼在下方")
+    print("   貼完後按兩次 Enter 確認")
+    print("   （或輸入檔案路徑，例如 data/analysis_2026-03-30.json）")
+    print("=" * 50)
+
+    lines = []
+    empty_count = 0
+
+    while True:
+        try:
+            line = input()
+        except EOFError:
+            break
+
+        if line.strip() == "" :
+            empty_count += 1
+            if empty_count >= 2 and lines:
+                break
+        else:
+            empty_count = 0
+            lines.append(line)
+
+    text = "\n".join(lines).strip()
+
+    # Check if it's a file path
+    if (text.endswith(".json") or text.startswith("/") or text.startswith("C:")) and "\n" not in text:
+        path = Path(text)
+        if not path.is_absolute():
+            path = ROOT_DIR / path
+        print(f"  📂 讀取檔案：{path}")
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    # Strip markdown fences if present
+    if text.startswith("```"):
+        text_lines = text.split("\n")
+        # Remove first line (```json) and last line (```)
+        if text_lines[-1].strip() == "```":
+            text = "\n".join(text_lines[1:-1])
+        else:
+            text = "\n".join(text_lines[1:])
+
+    return json.loads(text)
 
 
 def generate_index(docs_dir: Path):
@@ -116,6 +248,147 @@ def generate_index(docs_dir: Path):
 </html>"""
 
     (docs_dir / "index.html").write_text(index_html, encoding="utf-8")
+
+
+# ══════════════════════════════════════════
+#  Phase 1: Fetch RSS
+# ══════════════════════════════════════════
+def phase_fetch():
+    """Fetch RSS feeds, save raw JSON, build & copy prompt."""
+    today = datetime.now().strftime("%Y-%m-%d")
+    DATA_DIR.mkdir(exist_ok=True)
+
+    print(f"=== MA 時事日報 — {today} ===\n")
+
+    # Fetch
+    print("[1/2] 抓取 RSS 新聞...")
+    rss_data = fetch_all_feeds()
+    stats = rss_data["stats"]
+    print(f"  ✅ 抓取完成：{stats['total']} 則，來自 {len(stats['by_source'])} 個來源")
+    if stats["errors"]:
+        print(f"  ⚠️  失敗來源：{', '.join(stats['errors'])}")
+
+    # Save raw
+    raw_path = DATA_DIR / f"rss_raw_{today}.json"
+    raw_path.write_text(json.dumps(rss_data, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"  💾 原始資料：{raw_path}")
+
+    # Build prompt
+    print("\n[2/2] 產生 Claude prompt...")
+    prompt = build_prompt(rss_data)
+    prompt_path = DATA_DIR / f"prompt_{today}.txt"
+    prompt_path.write_text(prompt, encoding="utf-8")
+    print(f"  💾 Prompt 備份：{prompt_path}")
+
+    # Copy to clipboard
+    if copy_to_clipboard(prompt):
+        print(f"  📋 已複製到剪貼簿！（{len(prompt):,} 字元）")
+    else:
+        print(f"  ⚠️  無法複製到剪貼簿，請手動開啟 {prompt_path}")
+
+    print(f"\n{'='*50}")
+    print("📌 下一步：")
+    print("  1. 打開 Claude 桌面版（或 claude.ai）")
+    print("  2. Ctrl+V 貼上 prompt")
+    print("  3. 等 Claude 回覆 JSON")
+    print("  4. 複製 JSON，回來執行：python main.py generate")
+    print(f"{'='*50}")
+
+    return rss_data
+
+
+# ══════════════════════════════════════════
+#  Phase 2+3: Generate HTML from analysis
+# ══════════════════════════════════════════
+def phase_generate(analysis_path: str = None):
+    """Read analysis JSON (from file or stdin), generate HTML."""
+    today = datetime.now().strftime("%Y-%m-%d")
+    DOCS_DIR.mkdir(exist_ok=True)
+    DATA_DIR.mkdir(exist_ok=True)
+
+    # Get analysis JSON
+    if analysis_path:
+        path = Path(analysis_path)
+        if not path.is_absolute():
+            path = ROOT_DIR / path
+        print(f"📂 讀取分析檔案：{path}")
+        with open(path, "r", encoding="utf-8") as f:
+            analysis = json.load(f)
+    else:
+        analysis = wait_for_analysis_json()
+
+    # Save analysis
+    analysis_save_path = DATA_DIR / f"analysis_{today}.json"
+    analysis_save_path.write_text(
+        json.dumps(analysis, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    print(f"  💾 分析結果：{analysis_save_path}")
+
+    # Generate HTML
+    total = analysis.get("total_articles", 0)
+    print(f"\n🔨 生成 HTML...（{total} 則精選新聞）")
+    html_content = generate_html(analysis)
+
+    html_path = DOCS_DIR / f"{today}.html"
+    html_path.write_text(html_content, encoding="utf-8")
+    print(f"  ✅ HTML：{html_path}（{len(html_content):,} bytes）")
+
+    # Update index
+    generate_index(DOCS_DIR)
+    print(f"  ✅ 索引頁已更新")
+
+    # Summary
+    print(f"\n{'='*50}")
+    print(f"📊 完成摘要")
+    print(f"  日期：{today}")
+    print(f"  精選新聞：{total} 則")
+    print(f"  Top 5 必讀：")
+    for i, item in enumerate(analysis.get("top5", [])[:5], 1):
+        print(f"    {i}. [{item.get('section', '')}] {item.get('summary', '')}")
+    print(f"\n💡 執行 git add docs/ && git commit && git push 即可部署")
+
+    return 0
+
+
+# ══════════════════════════════════════════
+#  CLI Entry Point
+# ══════════════════════════════════════════
+def main():
+    if len(sys.argv) < 2:
+        # Full interactive flow
+        phase_fetch()
+        print("\n⏳ 請完成 Claude 分析後繼續...")
+        phase_generate()
+        return 0
+
+    cmd = sys.argv[1].lower()
+
+    if cmd == "fetch":
+        phase_fetch()
+        return 0
+
+    elif cmd == "generate":
+        # Optional: pass a file path as argument
+        path = sys.argv[2] if len(sys.argv) > 2 else None
+        phase_generate(path)
+        return 0
+
+    elif cmd == "help":
+        print("""
+MA 時事日報 — 使用方式
+
+  python main.py              完整互動流程（抓 RSS → 等你貼 JSON → 產 HTML）
+  python main.py fetch        只抓 RSS + 產生 prompt（複製到剪貼簿）
+  python main.py generate     貼回 Claude 的 JSON → 產出 HTML
+  python main.py generate FILE  從檔案讀取分析 JSON → 產出 HTML
+  python main.py help         顯示此說明
+        """)
+        return 0
+
+    else:
+        print(f"❌ 未知指令：{cmd}")
+        print("   執行 python main.py help 查看使用方式")
+        return 1
 
 
 if __name__ == "__main__":

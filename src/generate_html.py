@@ -403,7 +403,7 @@ def generate_html(analysis_json: dict) -> str:
     {sections_html}
 
     <footer>
-      <p>由 Claude 自動產出 · MA 面試準備用</p>
+      <p>由 Claude 分析產出 · MA 面試準備用</p>
       <p>RSS: CNBC · BBC · FT · WSJ · Al Jazeera · Yahoo Finance · 經濟日報 · TechCrunch</p>
     </footer>
   </div>
@@ -419,5 +419,9 @@ def _hex_to_rgb(hex_color: str) -> str:
 
 
 if __name__ == "__main__":
-    data = json.load(sys.stdin)
+    if len(sys.argv) > 1:
+        with open(sys.argv[1], "r", encoding="utf-8") as f:
+            data = json.load(f)
+    else:
+        data = json.load(sys.stdin)
     print(generate_html(data))
