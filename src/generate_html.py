@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
-MA 時事日報 — HTML 生成器
+MA 時事日報 — HTML 生成器（Apple Style Theme）
 讀取 Claude 產出的 JSON 分析結果，生成蘋果風自包含 HTML。
+設計參考：geekjourneyx/ai-daily-skill Apple Style Theme
 """
 
 import json
@@ -19,15 +20,17 @@ SECTION_COLORS = {
 
 APPLE_THEME_CSS = """
 :root {
-    --bg: #000000;
+    --bg-color: #000000;
+    --glow-start: #0A1929;
+    --glow-end: #1A3A52;
+    --title-color: #FFFFFF;
+    --text-color: #E3F2FD;
+    --accent-color: #42A5F5;
+    --secondary-color: #B0BEC5;
     --surface: rgba(255, 255, 255, 0.05);
     --surface-hover: rgba(255, 255, 255, 0.08);
-    --border: rgba(255, 255, 255, 0.08);
-    --border-hover: rgba(255, 255, 255, 0.15);
-    --text-primary: #f5f5f7;
-    --text-secondary: #86868b;
-    --text-tertiary: #6e6e73;
-    --accent: #42A5F5;
+    --border: rgba(255, 255, 255, 0.10);
+    --border-hover: rgba(255, 255, 255, 0.20);
     --interview: #FFA726;
 }
 
@@ -35,191 +38,288 @@ APPLE_THEME_CSS = """
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text-primary);
+    background: var(--bg-color);
+    color: var(--text-color);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* ── Background Glow ── */
+.background-glow {
+    position: fixed;
+    bottom: -20%;
+    right: -20%;
+    width: 70%;
+    height: 70%;
+    background: radial-gradient(
+        circle at center,
+        var(--glow-end) 0%,
+        var(--glow-start) 40%,
+        transparent 80%
+    );
+    opacity: 0.6;
+    filter: blur(80px);
+    z-index: -2;
+    pointer-events: none;
+}
+
+.background-glow-2 {
+    position: fixed;
+    top: -15%;
+    left: -15%;
+    width: 50%;
+    height: 50%;
+    background: radial-gradient(
+        circle at center,
+        rgba(66, 165, 245, 0.08) 0%,
+        transparent 70%
+    );
+    filter: blur(60px);
+    z-index: -2;
+    pointer-events: none;
+}
+
+/* ── Geometric Lines ── */
+.geometric-lines {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+        linear-gradient(90deg, transparent 49%, var(--accent-color) 50%, transparent 51%),
+        linear-gradient(0deg, transparent 49%, var(--accent-color) 50%, transparent 51%);
+    background-size: 200px 200px;
+    opacity: 0.04;
+    z-index: -1;
+    pointer-events: none;
 }
 
 .container {
-    max-width: 680px;
+    max-width: 800px;
     margin: 0 auto;
-    padding: 24px 16px 48px;
+    padding: 40px 20px 60px;
+    position: relative;
+    z-index: 1;
 }
 
 /* ── Header ── */
 header {
     text-align: center;
-    padding: 48px 0 32px;
+    padding: 60px 0 40px;
+}
+
+.logo-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 20px;
+    background: rgba(66, 165, 245, 0.15);
+    font-size: 32px;
+    margin-bottom: 20px;
+    animation: glow-pulse 3s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+    0%, 100% { box-shadow: 0 0 30px rgba(66,165,245,0.3), 0 0 60px rgba(66,165,245,0.1); }
+    50% { box-shadow: 0 0 40px rgba(66,165,245,0.5), 0 0 80px rgba(66,165,245,0.2); }
 }
 
 header h1 {
-    font-size: 28px;
+    font-size: 36px;
     font-weight: 700;
+    color: var(--title-color);
     letter-spacing: -0.5px;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
 }
 
-header .date {
-    font-size: 17px;
-    color: var(--text-secondary);
-    font-weight: 400;
+.date-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    background: rgba(66, 165, 245, 0.12);
+    border: 1px solid rgba(66, 165, 245, 0.2);
+    color: var(--accent-color);
+    font-size: 15px;
+    font-weight: 500;
 }
 
-header .stats {
+.stats {
     font-size: 14px;
-    color: var(--text-tertiary);
-    margin-top: 4px;
+    color: var(--secondary-color);
+    margin-top: 12px;
 }
 
-/* ── Top 5 ── */
-.top5 {
+/* ── Summary Card ── */
+.summary-card {
     background: var(--surface);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--border);
     border-radius: 16px;
-    padding: 24px;
-    margin-bottom: 32px;
+    padding: 28px;
+    margin-bottom: 40px;
+    transition: border-color 0.3s ease;
 }
 
-.top5 h2 {
-    font-size: 17px;
+.summary-card:hover {
+    border-color: var(--border-hover);
+}
+
+.summary-card h2 {
+    font-size: 18px;
     font-weight: 600;
-    margin-bottom: 16px;
-    color: var(--text-primary);
+    color: var(--title-color);
+    margin-bottom: 20px;
 }
 
-.top5 ol {
+.summary-card ol {
     list-style: none;
     counter-reset: top5;
 }
 
-.top5 ol li {
+.summary-card ol li {
     counter-increment: top5;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--border);
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
     font-size: 15px;
-    line-height: 1.5;
+    line-height: 1.6;
     display: flex;
     align-items: flex-start;
-    gap: 12px;
+    gap: 14px;
 }
 
-.top5 ol li:last-child { border-bottom: none; }
+.summary-card ol li:last-child { border-bottom: none; padding-bottom: 0; }
 
-.top5 ol li::before {
+.summary-card ol li::before {
     content: counter(top5);
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 24px;
-    height: 24px;
-    background: var(--accent);
+    min-width: 26px;
+    height: 26px;
+    background: var(--accent-color);
     color: #000;
     border-radius: 50%;
     font-size: 13px;
     font-weight: 700;
-    margin-top: 1px;
+    flex-shrink: 0;
+    margin-top: 2px;
 }
 
 /* ── Tags ── */
 .tag {
     display: inline-block;
-    padding: 2px 8px;
+    padding: 3px 10px;
     border-radius: 6px;
     font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.3px;
     white-space: nowrap;
+    margin-right: 6px;
 }
 
-/* ── Sections ── */
+/* ── Section ── */
 .section {
-    margin-bottom: 32px;
+    margin-bottom: 40px;
 }
 
 .section-header {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 16px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
 .section-dot {
-    width: 10px;
-    height: 10px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
     flex-shrink: 0;
+    box-shadow: 0 0 8px currentColor;
 }
 
 .section-header h2 {
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 600;
+    color: var(--title-color);
     letter-spacing: -0.3px;
 }
 
 /* ── Cards ── */
 .card {
     background: var(--surface);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid var(--border);
     border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 12px;
-    transition: all 0.2s ease;
-    animation: fadeIn 0.4s ease forwards;
+    padding: 24px;
+    margin-bottom: 14px;
+    transition: all 0.3s ease;
+    animation: fadeIn 0.5s ease forwards;
     opacity: 0;
 }
 
 .card:hover {
     background: var(--surface-hover);
-    border-color: var(--border-hover);
-    transform: translateY(-1px);
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
 }
 
 .card-major {
-    border-left: 3px solid var(--section-color, var(--accent));
+    border-left: 3px solid var(--section-color, var(--accent-color));
 }
 
 .card h3 {
-    font-size: 16px;
+    font-size: 17px;
     font-weight: 600;
-    margin-bottom: 12px;
-    line-height: 1.4;
+    color: var(--title-color);
+    margin-bottom: 14px;
+    line-height: 1.5;
 }
 
 .card .label {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-secondary);
-    margin-bottom: 2px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent-color);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
 }
 
 .card .body {
     font-size: 15px;
-    color: var(--text-secondary);
-    margin-bottom: 10px;
-    line-height: 1.6;
+    color: var(--text-color);
+    margin-bottom: 12px;
+    line-height: 1.7;
 }
 
 .card .interview-angle {
     font-size: 14px;
     color: var(--interview);
-    padding: 8px 12px;
+    padding: 10px 14px;
     background: rgba(255, 167, 38, 0.08);
-    border-radius: 8px;
-    margin: 12px 0;
+    border: 1px solid rgba(255, 167, 38, 0.15);
+    border-radius: 10px;
+    margin: 14px 0;
+    line-height: 1.6;
 }
 
 .card .sources {
     font-size: 13px;
-    color: var(--text-tertiary);
-    margin-top: 12px;
+    color: var(--secondary-color);
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.06);
 }
 
 .card .sources a {
-    color: var(--accent);
+    color: var(--accent-color);
     text-decoration: none;
     transition: opacity 0.2s;
 }
@@ -228,31 +328,54 @@ header .stats {
 
 /* ── Brief card ── */
 .card-brief {
-    padding: 14px 20px;
+    padding: 16px 24px;
 }
 
 .card-brief p {
     font-size: 14px;
-    line-height: 1.5;
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
+.card-brief strong {
+    color: var(--title-color);
 }
 
 /* ── Footer ── */
 footer {
     text-align: center;
-    padding: 32px 0;
-    border-top: 1px solid var(--border);
-    margin-top: 24px;
+    padding: 40px 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    margin-top: 32px;
 }
 
 footer p {
     font-size: 13px;
-    color: var(--text-tertiary);
-    margin-bottom: 4px;
+    color: var(--secondary-color);
+    margin-bottom: 6px;
+}
+
+.keywords-footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.keywords-footer span {
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(66, 165, 245, 0.08);
+    border: 1px solid rgba(66, 165, 245, 0.15);
+    color: var(--accent-color);
+    font-size: 12px;
+    font-weight: 500;
 }
 
 /* ── Animation ── */
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
+    from { opacity: 0; transform: translateY(12px); }
     to { opacity: 1; transform: translateY(0); }
 }
 
@@ -264,46 +387,17 @@ footer p {
 
 /* ── Responsive ── */
 @media (max-width: 480px) {
-    .container { padding: 16px 12px 32px; }
-    header { padding: 32px 0 24px; }
-    header h1 { font-size: 24px; }
-    .card { padding: 16px; }
+    .container { padding: 20px 14px 40px; }
+    header { padding: 40px 0 24px; }
+    header h1 { font-size: 28px; }
+    .card { padding: 18px; }
+    .summary-card { padding: 20px; }
+    .section-header h2 { font-size: 19px; }
 }
 """
 
 
 def generate_html(analysis_json: dict) -> str:
-    """
-    Generate self-contained Apple-style HTML from Claude's analysis output.
-
-    Expected analysis_json structure:
-    {
-        "date": "2026-03-30",
-        "day_of_week": "星期一",
-        "total_articles": 18,
-        "source_count": 12,
-        "top5": [
-            {"section": "macro", "summary": "..."},
-            ...
-        ],
-        "sections": {
-            "macro": {
-                "articles": [
-                    {
-                        "format": "A",
-                        "title": "...",
-                        "what_happened": "...",
-                        "why_important": "...",
-                        "interview_angle": "...",
-                        "sources": [{"name": "...", "url": "..."}]
-                    },
-                    ...
-                ]
-            },
-            ...
-        }
-    }
-    """
     date = analysis_json.get("date", "")
     day = analysis_json.get("day_of_week", "")
     total = analysis_json.get("total_articles", 0)
@@ -372,12 +466,16 @@ def generate_html(analysis_json: dict) -> str:
 
         sections_html += f'''<section class="section">
   <div class="section-header">
-    <span class="section-dot" style="background:{sec_info['color']}"></span>
+    <span class="section-dot" style="background:{sec_info['color']};color:{sec_info['color']}"></span>
     <h2>{sec_info['icon']} {sec_info['name']}</h2>
   </div>
   {cards_html}
 </section>
 '''
+
+    # Keywords
+    keywords = ["#Fed", "#油價", "#台股", "#AI", "#TSMC", "#Micron", "#LNG", "#荷莫茲", "#SpaceX", "#PE"]
+    keywords_html = "".join(f'<span>{k}</span>' for k in keywords)
 
     html = f"""<!DOCTYPE html>
 <html lang="zh-TW">
@@ -388,14 +486,19 @@ def generate_html(analysis_json: dict) -> str:
   <style>{APPLE_THEME_CSS}</style>
 </head>
 <body>
+  <div class="background-glow"></div>
+  <div class="background-glow-2"></div>
+  <div class="geometric-lines"></div>
+
   <div class="container">
     <header>
+      <div class="logo-icon">📰</div>
       <h1>MA 時事日報</h1>
-      <p class="date">{date}（{day}）</p>
-      <p class="stats">{total} 則新聞 · {src_count} 個來源</p>
+      <div class="date-badge">{date}（{day}）</div>
+      <p class="stats">{total} 則精選新聞 · {src_count} 個來源</p>
     </header>
 
-    <section class="top5">
+    <section class="summary-card">
       <h2>🔴 今日 Top 5 必讀</h2>
       <ol>{top5_html}</ol>
     </section>
@@ -405,6 +508,7 @@ def generate_html(analysis_json: dict) -> str:
     <footer>
       <p>由 Claude 分析產出 · MA 面試準備用</p>
       <p>RSS: CNBC · BBC · FT · WSJ · Al Jazeera · Yahoo Finance · 經濟日報 · TechCrunch</p>
+      <div class="keywords-footer">{keywords_html}</div>
     </footer>
   </div>
 </body>
