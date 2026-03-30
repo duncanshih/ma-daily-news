@@ -10,6 +10,7 @@ MA 時事日報 — 主入口（本機版，不需 API Key）
 或直接 python main.py 跑完整互動流程。
 """
 
+import io
 import json
 import os
 import subprocess
@@ -17,6 +18,11 @@ import platform
 import sys
 from datetime import datetime
 from pathlib import Path
+
+# Fix Windows CMD encoding (cp950 can't print emoji)
+if sys.stdout.encoding != "utf-8":
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
 
 from fetch_news import fetch_all_feeds
 from generate_html import generate_html

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MA 時事日報 — 2026-03-30</title>
+  <style>
+:root {
+    --bg: #000000;
+    --surface: rgba(255, 255, 255, 0.05);
+    --surface-hover: rgba(255, 255, 255, 0.08);
+    --border: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(255, 255, 255, 0.15);
+    --text-primary: #f5f5f7;
+    --text-secondary: #86868b;
+    --text-tertiary: #6e6e73;
+    --accent: #42A5F5;
+    --interview: #FFA726;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 24px 16px 48px;
+}
+
+/* ── Header ── */
+header {
+    text-align: center;
+    padding: 48px 0 32px;
+}
+
+header h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+}
+
+header .date {
+    font-size: 17px;
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+header .stats {
+    font-size: 14px;
+    color: var(--text-tertiary);
+    margin-top: 4px;
+}
+
+/* ── Top 5 ── */
+.top5 {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 32px;
+}
+
+.top5 h2 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text-primary);
+}
+
+.top5 ol {
+    list-style: none;
+    counter-reset: top5;
+}
+
+.top5 ol li {
+    counter-increment: top5;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 15px;
+    line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.top5 ol li:last-child { border-bottom: none; }
+
+.top5 ol li::before {
+    content: counter(top5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 24px;
+    height: 24px;
+    background: var(--accent);
+    color: #000;
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: 1px;
+}
+
+/* ── Tags ── */
+.tag {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+}
+
+/* ── Sections ── */
+.section {
+    margin-bottom: 32px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.section-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.section-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+}
+
+/* ── Cards ── */
+.card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 12px;
+    transition: all 0.2s ease;
+    animation: fadeIn 0.4s ease forwards;
+    opacity: 0;
+}
+
+.card:hover {
+    background: var(--surface-hover);
+    border-color: var(--border-hover);
+    transform: translateY(-1px);
+}
+
+.card-major {
+    border-left: 3px solid var(--section-color, var(--accent));
+}
+
+.card h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    line-height: 1.4;
+}
+
+.card .label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 2px;
+}
+
+.card .body {
+    font-size: 15px;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    line-height: 1.6;
+}
+
+.card .interview-angle {
+    font-size: 14px;
+    color: var(--interview);
+    padding: 8px 12px;
+    background: rgba(255, 167, 38, 0.08);
+    border-radius: 8px;
+    margin: 12px 0;
+}
+
+.card .sources {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin-top: 12px;
+}
+
+.card .sources a {
+    color: var(--accent);
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.card .sources a:hover { opacity: 0.7; }
+
+/* ── Brief card ── */
+.card-brief {
+    padding: 14px 20px;
+}
+
+.card-brief p {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* ── Footer ── */
+footer {
+    text-align: center;
+    padding: 32px 0;
+    border-top: 1px solid var(--border);
+    margin-top: 24px;
+}
+
+footer p {
+    font-size: 13px;
+    color: var(--text-tertiary);
+    margin-bottom: 4px;
+}
+
+/* ── Animation ── */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card:nth-child(1) { animation-delay: 0.05s; }
+.card:nth-child(2) { animation-delay: 0.1s; }
+.card:nth-child(3) { animation-delay: 0.15s; }
+.card:nth-child(4) { animation-delay: 0.2s; }
+.card:nth-child(5) { animation-delay: 0.25s; }
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+    .container { padding: 16px 12px 32px; }
+    header { padding: 32px 0 24px; }
+    header h1 { font-size: 24px; }
+    .card { padding: 16px; }
+}
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>MA 時事日報</h1>
+      <p class="date">2026-03-30（星期一）</p>
+      <p class="stats">18 則新聞 · 14 個來源</p>
+    </header>
+
+    <section class="top5">
+      <h2>🔴 今日 Top 5 必讀</h2>
+      <ol><li><span class="tag" style="background:rgba(66,165,245,0.15);color:#42A5F5">🌍 總經</span>胡塞武裝加入戰局，Brent創史上最大單月漲幅，WTI自2022年以來首破$100，油市進入backwardation結構</li>
+<li><span class="tag" style="background:rgba(66,165,245,0.15);color:#42A5F5">🌍 總經</span>Powell稱油價衝擊不構成升息理由，Morgan Stanley稱股市修正接近尾聲，但前白宮顧問警告能源衝擊=衰退</li>
+<li><span class="tag" style="background:rgba(102,187,106,0.15);color:#66BB6A">🤖 AI</span>Micron財報後累跌30%，DDR4/DDR5現貨鬆動引爆記憶體多空論戰，花旗同日升台積電目標價至2,800元</li>
+<li><span class="tag" style="background:rgba(239,83,80,0.15);color:#EF5350">🇹🇼 台灣</span>台股失守33K（外資賣超639億），央行總裁楊金龍：若油價$100則CPI升至1.9%，不排除升息</li>
+<li><span class="tag" style="background:rgba(255,167,38,0.15);color:#FFA726">⚡ 能源</span>卡達投資的美國Golden Pass LNG廠投產，填補荷莫茲封鎖導致的全球天然氣缺口</li>
+</ol>
+    </section>
+
+    <section class="section">
+  <div class="section-header">
+    <span class="section-dot" style="background:#42A5F5"></span>
+    <h2>🌍 總經 / 地緣政治</h2>
+  </div>
+  <article class="card card-major" style="--section-color:#42A5F5">
+  <h3>Brent原油創史上最大單月漲幅、WTI破$100 — 胡塞武裝加入戰局，衝突擴散至多條戰線</h3>
+  <p class="label">發生什麼事</p><p class="body">葉門胡塞武裝3月30日向以色列發射飛彈，為美以對伊朗開戰以來首次介入。Brent創史上最大單月漲幅，WTI收於$100以上（2022年以來首次）。以色列海法煉油廠遭飛彈攻擊起火，伊朗攻擊科威特電力與海水淡化設施，鋁價飆至2022年高點。油市進入backwardation結構（近月高於遠月），$150看漲期權部位較一個月前暴增逾七倍。</p><p class="label">為什麼重要</p><p class="body">胡塞介入使衝突從荷莫茲單一瓶頸擴散至紅海多戰線，backwardation結構意味市場開始定價長期物理供給缺口。紅海佔全球12%貨運量，若胡塞持續攻擊商船，海運保險費率將再疊一層風險溢價。</p>
+  <div class="interview-angle">💡 面試角度：對開發資本基建投資，LNG長約和海運基建的IRR假設需同時壓測『荷莫茲+紅海雙封鎖』情境，而非僅考慮單一瓶頸解除。</div>
+  <div class="sources"><a href="https://www.cnbc.com/2026/03/30/oil-price-today-wti-brent-yemen-houthis-israel-iran-war.html" target="_blank">CNBC</a> ｜ <a href="https://www.aljazeera.com/news/2026/3/30/fire-contained-after-missile-attack-on-oil-refinery-in-israels-haifa" target="_blank">Al Jazeera</a> ｜ <a href="https://www.ft.com/content/11904ce7-332d-4770-802f-9a0a08b7cfd9" target="_blank">FT</a></div>
+</article>
+<article class="card card-major" style="--section-color:#42A5F5">
+  <h3>Powell：通膨展望可控、油價衝擊無需升息 — Morgan Stanley稱股市修正接近尾聲</h3>
+  <p class="label">發生什麼事</p><p class="body">Fed主席Powell在哈佛演講表示通膨展望可控，油價衝擊不構成升息理由，私人信貸市場未現更廣泛危機。Morgan Stanley分析師Wilson稱市場已定價「油供受限但不致衰退」情境，股市修正接近完成。前白宮經濟顧問Goodspeed則警告「能源衝擊正是衰退核心驅動因素」。</p><p class="label">為什麼重要</p><p class="body">Powell的transitory 2.0判斷若被Q2 PCE數據推翻（油價→運輸→食品→核心CPI傳導滯後2-3個月），Fed敘事將被迫轉向，股市面臨雙底風險。</p>
+  <div class="interview-angle">💡 面試角度：財務管理MA的NIM壓力測試需同時建模『Fed按兵不動』和『被迫升息1碼』兩個情境。</div>
+  <div class="sources"><a href="https://www.cnbc.com/2026/03/30/powell-sees-inflation-outlook-in-check-no-wider-crisis-yet-in-private-credit.html" target="_blank">CNBC</a> ｜ <a href="https://www.cnbc.com/2026/03/30/morgan-stanley-says-to-watch-rates-as-stock-correction-is-almost-over.html" target="_blank">CNBC</a> ｜ <a href="https://www.cnbc.com/2026/03/30/recession-economy-trump-white-house-economist.html" target="_blank">CNBC</a></div>
+</article>
+<article class="card card-brief">
+  <p>📎 <strong>G7宣布準備採取「必要措施」確保能源市場穩定：</strong>高油價引發的通膨壓力、購買力損害與成長放緩已觸及G7政策紅線，巴基斯坦同步準備主辦美伊會談。</p>
+  <div class="sources"><a href="https://www.aljazeera.com/news/2026/3/30/g7-ready-to-take-necessary-measures-to-ensure-energy-market-stability" target="_blank">Al Jazeera</a></div>
+</article>
+
+</section>
+<section class="section">
+  <div class="section-header">
+    <span class="section-dot" style="background:#AB47BC"></span>
+    <h2>🏢 不動產 / 私募</h2>
+  </div>
+  <article class="card card-major" style="--section-color:#AB47BC">
+  <h3>川普開放401(k)退休金投資另類資產 — 美國$7兆退休金體系結構性轉折</h3>
+  <p class="label">發生什麼事</p><p class="body">美國勞工部提出規則，允許401(k)計畫納入PE、加密貨幣及不動產。約$7兆401(k)資金池將部分流入另類資產市場。Bill Ackman同日稱「現在是長期以來買進優質股票的最佳時機」。</p><p class="label">為什麼重要</p><p class="body">此規則將擴大PE的LP基礎，改善募資環境；但401(k)受益人的贖回靈活性需求與PE 3-7年鎖定期的結構性矛盾，是監管設計核心難題。</p>
+  <div class="interview-angle">💡 面試角度：對國泰CIM，美國PE募資環境中期改善，但退休金LP的贖回條款設計將成為投資結構談判的新變數。</div>
+  <div class="sources"><a href="https://www.cnbc.com/2026/03/30/401ks-alternative-investments.html" target="_blank">CNBC</a> ｜ <a href="https://www.ft.com/content/f38575bf-7d7e-41a8-ae77-6e25c44de3a2" target="_blank">FT</a></div>
+</article>
+<article class="card card-major" style="--section-color:#AB47BC">
+  <h3>Fermi資料中心地產暴跌13%（淨損$4.86億）+ 困境債基金瞄準「2008年以來最大機會」</h3>
+  <p class="label">發生什麼事</p><p class="body">Fermi公布$4.86億淨虧損，投資人擔憂缺乏租戶營收。FT報導困境債基金（Oaktree、Ares等）正大規模布局私人信貸下行，稱之為自2008年以來最大獲利機會，積極募資以低價收購壓力資產。</p><p class="label">為什麼重要</p><p class="body">高利率環境下資本密集型不動產與基建項目面臨再融資壓力，部分高槓桿資料中心開發商開始出現財務困難，但這對逆週期投資者是布局窗口。</p>
+  <div class="interview-angle">💡 面試角度：對國泰CIM，需區分『建設期暫時虧損』和『結構性商業模式問題』，困境資產投資的關鍵是判斷資產品質而非追逐折價。</div>
+  <div class="sources"><a href="https://www.ft.com/content/49a8b5c8-d655-4eb8-b0dc-6bd403860925" target="_blank">FT</a> ｜ <a href="https://www.ft.com/content/8c3514be-8c7b-4d13-a59a-dd8a23fb8c40" target="_blank">FT</a></div>
+</article>
+<article class="card card-brief">
+  <p>📎 <strong>英國政府接近全面國有化British Steel：</strong>與中國業主敬業集團的談判持續，虧損擴大，凸顯地緣政治背景下關鍵產業的國安考量。</p>
+  <div class="sources"><a href="https://www.ft.com/content/f8853735-c2be-46f3-8e66-831282fc3e7a" target="_blank">FT</a></div>
+</article>
+
+</section>
+<section class="section">
+  <div class="section-header">
+    <span class="section-dot" style="background:#66BB6A"></span>
+    <h2>🤖 AI / 半導體</h2>
+  </div>
+  <article class="card card-major" style="--section-color:#66BB6A">
+  <h3>Micron財報後累跌30% — EPS超預期30%但DDR現貨鬆動引爆記憶體多空論戰</h3>
+  <p class="label">發生什麼事</p><p class="body">Micron 3月30日再跌10%，自3/18超預期財報以來累跌約30%。DDR4與部分DDR5現貨報價鬆動。多方：HBM合約鎖倉+AI邊緣推論需求。空方：油價衝擊CSP capex、DeepSeek類低算力模型侵蝕需求、DDR現貨鬆動為週期見頂先兆。花旗同日升台積電目標價至2,800元。</p><p class="label">為什麼重要</p><p class="body">「業績好但股價差」的背離，核心是市場在定價DDR現貨鬆動暗示的庫存週期見頂，還是伊朗戰爭推升的能源成本將壓縮CSP capex。HBM客製化合約與傳統標準品現貨是否脫鉤，是估值關鍵。</p>
+  <div class="interview-angle">💡 面試角度：對國泰CIM評估記憶體供應鏈PE投資，DeepSeek類模型效率提升是binary risk而非可用DCF線性建模的風險。</div>
+  <div class="sources"><a href="https://www.cnbc.com/2026/03/30/micron-stock-earnings-sell-off-memory-shortage.html" target="_blank">CNBC</a> ｜ <a href="https://money.udn.com/money/story/5607/9412680" target="_blank">經濟日報</a></div>
+</article>
+<article class="card card-major" style="--section-color:#66BB6A">
+  <h3>SpaceX IPO在即 — E*Trade洽談領導零售投資人認購，史上最大規模IPO成形</h3>
+  <p class="label">發生什麼事</p><p class="body">E*Trade正與SpaceX洽談向美國零售投資人銷售IPO股份，估值約$3,500億，Starlink為主要營收驅動。此IPO可能帶動Stripe、Databricks等獨角獸跟進上市的窗口效應。</p><p class="label">為什麼重要</p><p class="body">若成功以$3,500億估值上市，將驗證高估值科技獨角獸的公開市場退出路徑暢通，對PE投資組合退出規劃是重要市場信號。</p>
+  <div class="interview-angle">💡 面試角度：對元大投行，SpaceX帶動的IPO窗口效應可能在Q2/Q3催生一波跨境ECM機會。</div>
+  <div class="sources"><a href="https://www.cnbc.com/2026/03/30/etrade-in-talks-to-lead-spacex-ipo-share-sale-to-small-us-investors.html" target="_blank">CNBC</a></div>
+</article>
+<article class="card card-brief">
+  <p>📎 <strong>Meta AI支出上調至$600-650億，全球CSP AI capex已達$7,200億：</strong>加上Stargate $5,000億承諾，算力軍備競賽持續加速，但油價衝擊開始對資料中心電力成本形成邊際壓力。</p>
+  <div class="sources"><a href="https://www.wsj.com/articles/meta-spending-ai-facebook-data-centers-9452a88f?mod=rss_Technology" target="_blank">WSJ</a></div>
+</article>
+<article class="card card-brief">
+  <p>📎 <strong>DeepSeek持續受矽谷關注，低算力效率模型為HBM超循環的系統性下行風險：</strong>WSJ連續報導中國AI模型DeepSeek以較低算力達成高效能表現，矽谷稱之為「驚人且令人印象深刻」。</p>
+  <div class="sources"><a href="https://www.wsj.com/articles/deepseek-ai-china-tech-stocks-explained-ee6cc80e?mod=rss_Technology" target="_blank">WSJ</a></div>
+</article>
+
+</section>
+<section class="section">
+  <div class="section-header">
+    <span class="section-dot" style="background:#FFA726"></span>
+    <h2>⚡ 能源 / 基建</h2>
+  </div>
+  <article class="card card-major" style="--section-color:#FFA726">
+  <h3>Golden Pass LNG廠投產 — 伊朗戰爭下全球LNG供應鏈重構加速</h3>
+  <p class="label">發生什麼事</p><p class="body">QatarEnergy與ExxonMobil合資的美國Golden Pass LNG廠正式投產，年處理能力約1,800萬噸。投產時機恰逢荷莫茲封鎖導致卡達本土LNG出口受阻。中國供應商警告美國買家價格將上升，印度警告經濟增長放緩、赤字擴大，英國本週收到最後一批中東航空燃油。</p><p class="label">為什麼重要</p><p class="body">1,800萬噸年產能僅佔全球需求約4%，結構性缺口仍需多個項目同步推進。各國加速布局非中東LNG來源（美國Gulf Coast、澳洲、莫三比克）。</p>
+  <div class="interview-angle">💡 面試角度：LNG接收站和再氣化設施的IRR在荷莫茲長期封鎖情境下將獲得顯著提升，是當前最確定的基建投資主題之一。</div>
+  <div class="sources"><a href="https://www.ft.com/content/318bd673-f2fe-4417-89b7-d6553a696f86" target="_blank">FT</a> ｜ <a href="https://www.cnbc.com/2026/03/30/india-flags-slower-growth-wider-deficit-iran-war.html" target="_blank">CNBC</a> ｜ <a href="https://www.ft.com/content/19f155b1-8b12-491a-bbc5-a3bdb2a2e607" target="_blank">FT</a></div>
+</article>
+<article class="card card-major" style="--section-color:#FFA726">
+  <h3>🔄 伊朗計畫對荷莫茲海峽通行收費（持續追蹤）</h3>
+  <p class="label">發生什麼事</p><p class="body">伊朗官員已起草立法，擬對通過荷莫茲海峽的船隻收取「安全通行費」，同時以色列於3/26擊殺負責封鎖的伊朗海軍司令Tangsiri。</p><p class="label">關鍵數據</p><p class="body">荷莫茲每日過境約2,100萬桶石油（全球海運石油的21%）；伊朗海軍指揮官更替是否影響封鎖執行力度是關鍵觀察點</p>
+  
+  <div class="sources"><a href="https://www.cnbc.com/2026/03/26/iran-plans-tolls-on-ships-passing-through-strait-of-hormuz.html" target="_blank">CNBC</a> ｜ <a href="https://www.cnbc.com/2026/03/26/strait-of-hormuz-israel-iran-alireza-tangsiri-middle-east-war.html" target="_blank">CNBC</a></div>
+</article>
+<article class="card card-brief">
+  <p>📎 <strong>伊朗攻擊巴林鋁業設施、科威特電力/淡化廠——鋁價飆至2022年高點：</strong>中東基礎設施遭攻擊範圍擴大至非石油目標，鋁供應危機「震動」金屬市場，川普威脅炸毀伊朗海水淡化廠。</p>
+  <div class="sources"><a href="https://www.cnbc.com/2026/03/30/iran-attacks-aluminum-producers-shockwaves-market-metals.html" target="_blank">CNBC</a> ｜ <a href="https://www.aljazeera.com/news/2026/3/30/trump-threatens-to-blow-up-all-desalination-plants-in-iran" target="_blank">Al Jazeera</a></div>
+</article>
+
+</section>
+<section class="section">
+  <div class="section-header">
+    <span class="section-dot" style="background:#EF5350"></span>
+    <h2>🇹🇼 台灣 / 亞太</h2>
+  </div>
+  <article class="card card-major" style="--section-color:#EF5350">
+  <h3>台股失守33,000點 — 央行總裁楊金龍：油價$100則CPI升至1.9%，不排除升息</h3>
+  <p class="label">發生什麼事</p><p class="body">台股3月30日大跌594點收32,518點，失守33K。外資單日賣超639.3億元，恐慌指數一度衝高至近40%，台積電跌破季線。央行總裁楊金龍表示若全年平均油價升至每桶$100，國內CPI可能升至1.9%，不排除升息。法人預估指數將在月線與季線間震盪。</p><p class="label">為什麼重要</p><p class="body">楊金龍的CPI 1.9%估算基於「全年平均油價$100」，但WTI已破$100且$150看漲期權暴增七倍，若下半年油價中樞$110-120，CPI可能超2%觸發升息。央行面臨「抗通膨升息」與「護匯」雙重壓力。</p>
+  <div class="interview-angle">💡 面試角度：對中信財務管理MA，需同時壓測升息0bp/12.5bp/25bp三種情境下的NIM變動和房貸資產品質影響。</div>
+  <div class="sources"><a href="https://money.udn.com/money/story/5607/9412899" target="_blank">經濟日報</a> ｜ <a href="https://money.udn.com/money/story/5607/9412777" target="_blank">經濟日報</a> ｜ <a href="https://money.udn.com/money/story/5607/9412417" target="_blank">經濟日報</a></div>
+</article>
+<article class="card card-major" style="--section-color:#EF5350">
+  <h3>🔄 花旗升台積電目標價至2,800元（持續追蹤）</h3>
+  <p class="label">發生什麼事</p><p class="body">花旗最新報告預期台積電明年AI營收年增逾100%，目標價由2,600元升至2,800元（內外資第二高，僅次里昂3,030元），維持買進。</p><p class="label">關鍵數據</p><p class="body">CoWoS先進封裝月產能約3-3.5萬片、2026年底目標約4萬片；AI營收佔比持續提升；訂單能見度延伸至2028年</p>
+  
+  <div class="sources"><a href="https://money.udn.com/money/story/5607/9412684" target="_blank">經濟日報</a></div>
+</article>
+<article class="card card-brief">
+  <p>📎 <strong>倍利科上市首日飆漲117%，前興櫃股王躋身千金股：</strong>以承銷價780元上市，首日收1,695元（+117%），不受大盤大跌影響，蜜月行情甜蜜。</p>
+  <div class="sources"><a href="https://money.udn.com/money/story/5710/9412414" target="_blank">經濟日報</a></div>
+</article>
+<article class="card card-brief">
+  <p>📎 <strong>海運股長榮、萬海受法人關注——地緣政治紅利轉化為結構性支撐：</strong>全球貨運市場在關稅動盪後展現韌性，運價回穩與新船下水助攻，法人稱海運業進入「質變期」。</p>
+  <div class="sources"><a href="https://money.udn.com/money/story/5739/9412437" target="_blank">經濟日報</a></div>
+</article>
+
+</section>
+
+
+    <footer>
+      <p>由 Claude 分析產出 · MA 面試準備用</p>
+      <p>RSS: CNBC · BBC · FT · WSJ · Al Jazeera · Yahoo Finance · 經濟日報 · TechCrunch</p>
+    </footer>
+  </div>
+</body>
+</html>
