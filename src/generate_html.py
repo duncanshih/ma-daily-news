@@ -455,6 +455,83 @@ body.theme-light .card .contradiction {
     line-height: 1.7;
 }
 
+/* ── Interpretation ── */
+.card .interpretation {
+    font-size: 14px;
+    color: var(--text-color);
+    padding: 12px 14px;
+    background: rgba(var(--accent-rgb), 0.04);
+    border-left: 3px solid var(--accent-color);
+    border-radius: 4px;
+    margin: 12px 0;
+    line-height: 1.7;
+}
+
+/* ── Outlook ── */
+.card .outlook {
+    font-size: 14px;
+    color: var(--text-color);
+    padding: 14px;
+    background: rgba(var(--accent-rgb), 0.03);
+    border: 1px solid rgba(var(--accent-rgb), 0.10);
+    border-radius: 10px;
+    margin: 12px 0;
+    line-height: 1.7;
+}
+
+.card .outlook .outlook-title {
+    font-weight: 600;
+    color: var(--title-color);
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.card .outlook p {
+    margin-bottom: 6px;
+}
+
+.card .outlook strong {
+    color: var(--accent-color);
+    font-size: 13px;
+}
+
+/* ── Watch list ── */
+.card .watch-list {
+    font-size: 13px;
+    color: var(--secondary-color);
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+.card .watch-list ul {
+    list-style: none;
+    padding: 4px 0 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.card .watch-list li {
+    padding: 3px 10px;
+    background: rgba(var(--accent-rgb), 0.06);
+    border: 1px solid rgba(var(--accent-rgb), 0.10);
+    border-radius: 6px;
+    font-size: 12px;
+}
+
+/* ── Interview verbal ── */
+.card .interview-verbal {
+    font-size: 14px;
+    color: var(--title-color);
+    padding: 12px 14px;
+    background: rgba(var(--interview-rgb), 0.05);
+    border: 1px solid rgba(var(--interview-rgb), 0.12);
+    border-radius: 10px;
+    margin: 10px 0;
+    line-height: 1.7;
+    font-style: italic;
+}
+
 /* ── Brief card ── */
 .card-brief {
     padding: 16px 24px;
@@ -620,18 +697,24 @@ def generate_html(analysis_json: dict, theme: str = "light") -> str:
                     tracking = "🔄 "
 
                 what = art.get("what_happened", art.get("latest_development", ""))
+                interpretation = art.get("interpretation", "")
                 angle = art.get("interview_angle", "")
+                verbal = art.get("interview_verbal", "")
                 key_data = art.get("key_data", "")
                 transmission = art.get("transmission", "")
                 structural = art.get("structural_or_cyclical", "")
                 contradiction = art.get("contradiction", "")
                 scenarios = art.get("scenarios", "")
+                outlook = art.get("outlook", {})
+                watch_list = art.get("watch_list", [])
 
                 body_parts = []
                 if what:
                     body_parts.append(f'<p class="label">發生什麼事</p><p class="body">{what}</p>')
                 if key_data:
                     body_parts.append(f'<p class="label">關鍵數據</p><p class="body">{key_data}</p>')
+                if interpretation:
+                    body_parts.append(f'<div class="interpretation">📐 解讀：{interpretation}</div>')
                 if transmission:
                     body_parts.append(f'<div class="transmission">🔗 {transmission}</div>')
                 if structural:
@@ -641,14 +724,36 @@ def generate_html(analysis_json: dict, theme: str = "light") -> str:
                 if scenarios:
                     body_parts.append(f'<div class="scenarios">🔀 {scenarios}</div>')
 
+                # Outlook (3-layer)
+                if outlook:
+                    outlook_parts = []
+                    if outlook.get("short_term"):
+                        outlook_parts.append(f'<p><strong>短期（1個月內）：</strong>{outlook["short_term"]}</p>')
+                    if outlook.get("mid_term"):
+                        outlook_parts.append(f'<p><strong>中期（3-6個月）：</strong>{outlook["mid_term"]}</p>')
+                    if outlook.get("long_term"):
+                        outlook_parts.append(f'<p><strong>長期（1年以上）：</strong>{outlook["long_term"]}</p>')
+                    if outlook_parts:
+                        body_parts.append(f'<div class="outlook"><p class="outlook-title">🔭 展望</p>{"".join(outlook_parts)}</div>')
+
+                # Watch list
+                if watch_list:
+                    items = "".join(f"<li>{w}</li>" for w in watch_list)
+                    body_parts.append(f'<div class="watch-list">📡 持續追蹤：<ul>{items}</ul></div>')
+
                 angle_html = ""
                 if angle:
                     angle_html = f'<div class="interview-angle">💡 面試角度：{angle}</div>'
+
+                verbal_html = ""
+                if verbal:
+                    verbal_html = f'<div class="interview-verbal">💬 口說版：「{verbal}」</div>'
 
                 cards_html += f'''<article class="card card-major" style="--section-color:{sec_info['color']}">
   <h3>{tracking}{art.get("title", "")}</h3>
   {"".join(body_parts)}
   {angle_html}
+  {verbal_html}
   <div class="sources">{sources_links}</div>
 </article>
 '''
