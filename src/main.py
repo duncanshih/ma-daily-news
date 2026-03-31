@@ -278,33 +278,37 @@ def generate_index(docs_dir: Path):
   <title>MA 時事日報 — 歷史期數</title>
   <style>
     body {{
-      font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-      background: #000;
-      color: #f5f5f7;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
+      background: #FFFFFF;
+      color: #333333;
       max-width: 680px;
       margin: 0 auto;
       padding: 48px 16px;
+      -webkit-font-smoothing: antialiased;
     }}
-    h1 {{ font-size: 28px; font-weight: 700; margin-bottom: 32px; text-align: center; }}
+    h1 {{ font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; color: #1A1A1A; }}
+    .subtitle {{ text-align: center; font-size: 14px; color: #5F6368; margin-bottom: 32px; }}
     ul {{ list-style: none; padding: 0; }}
     li {{
       padding: 16px 20px;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(0,0,0,0.02);
+      border: 1px solid rgba(0,0,0,0.08);
       border-radius: 12px;
       margin-bottom: 8px;
       transition: all 0.2s;
     }}
-    li:hover {{ background: rgba(255,255,255,0.08); transform: translateY(-1px); }}
-    a {{ color: #42A5F5; text-decoration: none; font-size: 17px; font-weight: 500; }}
+    li:hover {{ background: rgba(26,115,232,0.04); border-color: rgba(26,115,232,0.3); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }}
+    a {{ color: #1A73E8; text-decoration: none; font-size: 17px; font-weight: 500; }}
     a:hover {{ opacity: 0.7; }}
-    .count {{ color: #86868b; font-size: 14px; margin-top: 8px; }}
+    .count {{ color: #5F6368; font-size: 14px; margin-top: 8px; text-align: center; }}
+    footer {{ text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.08); font-size: 13px; color: #5F6368; }}
   </style>
 </head>
 <body>
   <h1>MA 時事日報</h1>
   <p class="count">共 {len(html_files)} 期</p>
   <ul>{links}</ul>
+  <footer>MA 面試時事準備 · 每日更新</footer>
 </body>
 </html>"""
 
