@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MA 時事日報 — 2026-08-04</title>
+  <style>
+:root {
+    --bg-color: #FFFFFF;
+    --glow-start: #E8F0FE;
+    --glow-end: #D2E3FC;
+    --title-color: #1A1A1A;
+    --text-color: #333333;
+    --accent-color: #1A73E8;
+    --accent-rgb: 26, 115, 232;
+    --secondary-color: #5F6368;
+    --surface: rgba(0, 0, 0, 0.03);
+    --surface-hover: rgba(0, 0, 0, 0.06);
+    --border: rgba(0, 0, 0, 0.10);
+    --border-hover: rgba(26, 115, 232, 0.30);
+    --interview: #E8710A;
+    --interview-rgb: 232, 113, 10;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* ── Background Glow ── */
+.background-glow {
+    position: fixed;
+    bottom: -20%;
+    right: -20%;
+    width: 70%;
+    height: 70%;
+    background: radial-gradient(
+        circle at center,
+        var(--glow-end) 0%,
+        var(--glow-start) 40%,
+        transparent 80%
+    );
+    opacity: 0.6;
+    filter: blur(80px);
+    z-index: -2;
+    pointer-events: none;
+}
+
+.background-glow-2 {
+    position: fixed;
+    top: -15%;
+    left: -15%;
+    width: 50%;
+    height: 50%;
+    background: radial-gradient(
+        circle at center,
+        rgba(var(--accent-rgb), 0.08) 0%,
+        transparent 70%
+    );
+    filter: blur(60px);
+    z-index: -2;
+    pointer-events: none;
+}
+
+/* ── Geometric Lines ── */
+.geometric-lines {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+        linear-gradient(90deg, transparent 49%, var(--accent-color) 50%, transparent 51%),
+        linear-gradient(0deg, transparent 49%, var(--accent-color) 50%, transparent 51%);
+    background-size: 200px 200px;
+    opacity: 0.04;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 40px 20px 60px;
+    position: relative;
+    z-index: 1;
+}
+
+/* ── Header ── */
+header {
+    text-align: center;
+    padding: 60px 0 40px;
+}
+
+.logo-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 20px;
+    background: rgba(var(--accent-rgb), 0.15);
+    font-size: 32px;
+    margin-bottom: 20px;
+    animation: glow-pulse 3s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+    0%, 100% { box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.3), 0 0 60px rgba(var(--accent-rgb), 0.1); }
+    50% { box-shadow: 0 0 40px rgba(var(--accent-rgb), 0.5), 0 0 80px rgba(var(--accent-rgb), 0.2); }
+}
+
+header h1 {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--title-color);
+    letter-spacing: -0.5px;
+    margin-bottom: 12px;
+}
+
+.date-badge {
+    display: inline-block;
+    padding: 6px 16px;
+    border-radius: 20px;
+    background: rgba(var(--accent-rgb), 0.12);
+    border: 1px solid rgba(var(--accent-rgb), 0.2);
+    color: var(--accent-color);
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.stats {
+    font-size: 14px;
+    color: var(--secondary-color);
+    margin-top: 12px;
+}
+
+/* ── Summary Card ── */
+.summary-card {
+    background: var(--surface);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 40px;
+    transition: border-color 0.3s ease;
+}
+
+.summary-card:hover {
+    border-color: var(--border-hover);
+}
+
+.summary-card h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--title-color);
+    margin-bottom: 20px;
+}
+
+.summary-card ol {
+    list-style: none;
+    counter-reset: top5;
+}
+
+.summary-card ol li {
+    counter-increment: top5;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    font-size: 15px;
+    line-height: 1.6;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+}
+
+.summary-card ol li:last-child { border-bottom: none; padding-bottom: 0; }
+
+.summary-card ol li::before {
+    content: counter(top5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 26px;
+    height: 26px;
+    background: var(--accent-color);
+    color: var(--bg-color);
+    border-radius: 50%;
+    font-size: 13px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+/* ── Tags ── */
+.tag {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    margin-right: 6px;
+}
+
+/* ── Section ── */
+.section {
+    margin-bottom: 40px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.section-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 8px currentColor;
+}
+
+.section-header h2 {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--title-color);
+    letter-spacing: -0.3px;
+}
+
+/* ── Cards ── */
+.card {
+    background: var(--surface);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 14px;
+    transition: all 0.3s ease;
+    animation: fadeIn 0.5s ease forwards;
+    opacity: 0;
+}
+
+.card:hover {
+    background: var(--surface-hover);
+    border-color: var(--accent-color);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+}
+
+.card-major {
+    border-left: 3px solid var(--section-color, var(--accent-color));
+}
+
+.card h3 {
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--title-color);
+    margin-bottom: 14px;
+    line-height: 1.5;
+}
+
+.card .label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent-color);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 4px;
+}
+
+.card .body {
+    font-size: 15px;
+    color: var(--text-color);
+    margin-bottom: 12px;
+    line-height: 1.7;
+}
+
+.card .interview-angle {
+    font-size: 14px;
+    color: var(--interview);
+    padding: 10px 14px;
+    background: rgba(var(--interview-rgb), 0.08);
+    border: 1px solid rgba(var(--interview-rgb), 0.15);
+    border-radius: 10px;
+    margin: 14px 0;
+    line-height: 1.6;
+}
+
+.card .sources {
+    font-size: 13px;
+    color: var(--secondary-color);
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.card .sources a {
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+.card .sources a:hover { opacity: 0.7; }
+
+/* ── Analysis framework fields ── */
+.card .transmission {
+    font-size: 14px;
+    color: var(--accent-color);
+    padding: 10px 14px;
+    background: rgba(var(--accent-rgb), 0.06);
+    border: 1px solid rgba(var(--accent-rgb), 0.12);
+    border-radius: 10px;
+    margin: 10px 0;
+    line-height: 1.6;
+    font-weight: 500;
+}
+
+.card .structural-tag {
+    font-size: 13px;
+    color: var(--secondary-color);
+    margin: 8px 0;
+    line-height: 1.5;
+}
+
+.card .contradiction {
+    font-size: 14px;
+    color: #E53935;
+    padding: 8px 14px;
+    background: rgba(229, 57, 53, 0.06);
+    border: 1px solid rgba(229, 57, 53, 0.12);
+    border-radius: 10px;
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+body.theme-light .card .contradiction {
+    color: #C62828;
+    background: rgba(198, 40, 40, 0.05);
+    border-color: rgba(198, 40, 40, 0.12);
+}
+
+.card .scenarios {
+    font-size: 14px;
+    color: var(--text-color);
+    padding: 10px 14px;
+    background: rgba(var(--accent-rgb), 0.04);
+    border-left: 3px solid var(--accent-color);
+    border-radius: 4px;
+    margin: 10px 0;
+    line-height: 1.7;
+}
+
+/* ── Interpretation ── */
+.card .interpretation {
+    font-size: 14px;
+    color: var(--text-color);
+    padding: 12px 14px;
+    background: rgba(var(--accent-rgb), 0.04);
+    border-left: 3px solid var(--accent-color);
+    border-radius: 4px;
+    margin: 12px 0;
+    line-height: 1.7;
+}
+
+/* ── Outlook ── */
+.card .outlook {
+    font-size: 14px;
+    color: var(--text-color);
+    padding: 14px;
+    background: rgba(var(--accent-rgb), 0.03);
+    border: 1px solid rgba(var(--accent-rgb), 0.10);
+    border-radius: 10px;
+    margin: 12px 0;
+    line-height: 1.7;
+}
+
+.card .outlook .outlook-title {
+    font-weight: 600;
+    color: var(--title-color);
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.card .outlook p {
+    margin-bottom: 6px;
+}
+
+.card .outlook strong {
+    color: var(--accent-color);
+    font-size: 13px;
+}
+
+/* ── Watch list ── */
+.card .watch-list {
+    font-size: 13px;
+    color: var(--secondary-color);
+    margin: 10px 0;
+    line-height: 1.6;
+}
+
+.card .watch-list ul {
+    list-style: none;
+    padding: 4px 0 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.card .watch-list li {
+    padding: 3px 10px;
+    background: rgba(var(--accent-rgb), 0.06);
+    border: 1px solid rgba(var(--accent-rgb), 0.10);
+    border-radius: 6px;
+    font-size: 12px;
+}
+
+/* ── Interview verbal ── */
+.card .interview-verbal {
+    font-size: 14px;
+    color: var(--title-color);
+    padding: 12px 14px;
+    background: rgba(var(--interview-rgb), 0.05);
+    border: 1px solid rgba(var(--interview-rgb), 0.12);
+    border-radius: 10px;
+    margin: 10px 0;
+    line-height: 1.7;
+    font-style: italic;
+}
+
+/* ── Taiwan sources ── */
+.card .tw-sources {
+    font-size: 13px;
+    color: var(--secondary-color);
+    margin-top: 10px;
+    padding: 8px 12px;
+    background: rgba(239, 83, 80, 0.05);
+    border: 1px solid rgba(239, 83, 80, 0.12);
+    border-radius: 8px;
+    line-height: 1.6;
+}
+
+.card .tw-sources .tw-label {
+    font-weight: 600;
+    color: #EF5350;
+    margin-right: 6px;
+}
+
+body.theme-light .card .tw-sources {
+    background: rgba(239, 83, 80, 0.04);
+    border-color: rgba(239, 83, 80, 0.15);
+}
+
+body.theme-light .card .tw-sources .tw-label {
+    color: #D32F2F;
+}
+
+.card .tw-sources a {
+    color: #EF5350;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+
+body.theme-light .card .tw-sources a {
+    color: #D32F2F;
+}
+
+.card .tw-sources a:hover { opacity: 0.7; }
+
+/* ── Brief card ── */
+.card-brief {
+    padding: 16px 24px;
+}
+
+.card-brief p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--text-color);
+}
+
+.card-brief strong {
+    color: var(--title-color);
+}
+
+/* ── Footer ── */
+footer {
+    text-align: center;
+    padding: 40px 0;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    margin-top: 32px;
+}
+
+footer p {
+    font-size: 13px;
+    color: var(--secondary-color);
+    margin-bottom: 6px;
+}
+
+.keywords-footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.keywords-footer span {
+    padding: 4px 12px;
+    border-radius: 20px;
+    background: rgba(var(--accent-rgb), 0.08);
+    border: 1px solid rgba(var(--accent-rgb), 0.15);
+    color: var(--accent-color);
+    font-size: 12px;
+    font-weight: 500;
+}
+
+/* ── Theme badge ── */
+.theme-badge {
+    font-size: 11px;
+    color: var(--secondary-color);
+    opacity: 0.5;
+    margin-top: 8px;
+}
+
+/* ── Animation ── */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.card:nth-child(1) { animation-delay: 0.05s; }
+.card:nth-child(2) { animation-delay: 0.1s; }
+.card:nth-child(3) { animation-delay: 0.15s; }
+.card:nth-child(4) { animation-delay: 0.2s; }
+.card:nth-child(5) { animation-delay: 0.25s; }
+
+/* ── Light theme overrides ── */
+body.theme-light .background-glow {
+    opacity: 0.4;
+}
+
+body.theme-light .background-glow-2 {
+    opacity: 0.3;
+}
+
+body.theme-light .geometric-lines {
+    opacity: 0.06;
+}
+
+body.theme-light .summary-card ol li {
+    border-bottom-color: rgba(0,0,0,0.06);
+}
+
+body.theme-light .section-header {
+    border-bottom-color: rgba(0,0,0,0.10);
+}
+
+body.theme-light .card:hover {
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+}
+
+body.theme-light .card .sources {
+    border-top-color: rgba(0,0,0,0.08);
+}
+
+body.theme-light footer {
+    border-top-color: rgba(0,0,0,0.10);
+}
+
+body.theme-light .section-dot {
+    box-shadow: 0 0 6px currentColor;
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+    .container { padding: 20px 14px 40px; }
+    header { padding: 40px 0 24px; }
+    header h1 { font-size: 28px; }
+    .card { padding: 18px; }
+    .summary-card { padding: 20px; }
+    .section-header h2 { font-size: 19px; }
+}
+
+  </style>
+</head>
+<body class="theme-light">
+  <div class="background-glow"></div>
+  <div class="background-glow-2"></div>
+  <div class="geometric-lines"></div>
+
+  <div class="container">
+    <header>
+      <div class="logo-icon">📰</div>
+      <h1>MA 時事日報</h1>
+      <div class="date-badge">2026-08-04（星期二）</div>
+      <p class="stats">20 則精選新聞 · 18 個來源</p>
+    </header>
+
+    <section class="summary-card">
+      <h2>🔴 今日 Top 5 必讀</h2>
+      <ol><li><span class="tag" style="background:rgba(66,165,245,0.15);color:#42A5F5">🌍 總經</span>美日15年來首度聯手干預匯市，美方以歐元而非美債籌資、並研議擴大Fed FIMA機制，日圓自163彈至155.2後回貶至157.55，標誌美國進入「匯率行動主義」新階段</li>
+<li><span class="tag" style="background:rgba(102,187,106,0.15);color:#66BB6A">🤖 AI</span>Google為Anthropic打造2,000億美元融資機器（私募信貸＋晶片租賃＋資料中心擔保），AI資本支出正在把科技業風險轉移到信貸市場</li>
+<li><span class="tag" style="background:rgba(255,167,38,0.15);color:#FFA726">⚡ 能源</span>貝森特稱最快週二、三達成荷莫茲海峽「自由航行」協議，油價回落；同日BP獲利翻倍至57億美元、沙烏地阿美增33%，川普痛批石油巨頭「賺太多」</li>
+<li><span class="tag" style="background:rgba(239,83,80,0.15);color:#EF5350">🇹🇼 台灣</span>金管會核准台新銀併新光銀，2027/1/1為基準日，合併後總資產4.7兆元、據點204家躍居國銀第二；同日南亞科7月營收438.68億元、年增719.6%</li>
+<li><span class="tag" style="background:rgba(171,71,188,0.15);color:#AB47BC">🏢 不動產</span>Prologis以140億英鎊收購倫敦掛牌物流地產REIT Segro，跨境併購潮延燒；同時Apollo坦承「審慎延後」資產出售，私募退場環境惡化</li>
+</ol>
+    </section>
+
+    <section class="section">
+  <div class="section-header">
+    <span class="section-dot" style="background:#42A5F5;color:#42A5F5"></span>
+    <h2>🌍 總經 / 地緣政治</h2>
+  </div>
+  <article class="card card-major" style="--section-color:#42A5F5">
+  <h3>美日聯手干預日圓進入第二週 — 美國以歐元籌資、研議借道Fed FIMA機制，「匯率行動主義」正式登場</h3>
+  <p class="label">發生什麼事</p><p class="body">美日於7月底15年來首度聯合干預匯市，將日圓自1美元兌163.0的四十年低點拉升至155.2的三個月高點，但8月4日盤中日圓再貶0.25%至157.55，漲幅已回吐約四成。關鍵細節有三：第一，市場報導指出華盛頓這次是「賣歐元」而非賣美國公債來籌措干預資金，刻意避開對敏感的美債市場造成賣壓；第二，財政部長貝森特正尋求擴大聯準會的FIMA（外國和國際貨幣當局）附買回融通機制，讓日本能以持有的美債作為擔保換取美元，而不必真的拋售美債；第三，日本財務大臣片山皋月4日確認將與華盛頓「不排除再次聯合干預」以對抗「失序波動」。但彭博對日本央行帳戶數據的分析顯示，8月3日（週一）並無大規模干預的明確跡象，代表這波守勢主要靠口頭嚇阻而非真金白銀。Evercore ISI警告，若日本長期依賴FIMA這項鮮少動用的工具，反而可能誘使市場試探美日兩國的決心底線。</p><div class="interpretation">📐 解讀：這不是傳統的匯率維穩，而是美國對「日圓套利交易」這個全球流動性總開關的主動管理。過去美國財政部對他國干預匯市多半冷處理甚至施壓，這次主動下場，本質是因為日圓過度貶值會透過兩條路徑反噬美國：一是套利平倉風險（yen carry trade 一旦反轉會同時衝擊美股與新興市場，2024年8月已預演過一次），二是日本若為守匯而拋售美債，會直接推高美國長端殖利率——10年期已在4.708%。所以FT說得對，這是「美國自我保全」，不是幫日本。真正的訊號是：美國財政部已把匯率當成政策工具箱裡的常備武器，而不是只在危機時動用的緊急煞車。</div><div class="transmission">🔗 日圓貶破163 → 套利交易槓桿累積＋日本進口通膨惡化 → 日本若拋美債守匯則美債長端殖利率飆升 → 美國房貸利率（已達6.66%）與企業融資成本上行 → 美國財政部改採「賣歐元＋擴大FIMA」的迂迴干預 → 日圓短線急升8點但兩週回吐四成 → 市場開始測試155這道防線</div><div class="structural-tag">🏗️ 結構性 — 結構性。判斷依據：美國願意動用聯準會的流動性工具（FIMA）而非單純口頭干預，代表這是制度化的安排而非一次性行動；日本財務大臣公開承諾「必要時再次聯合出手」也把它變成常設機制。週期性的部分只有日圓的價位本身。</div><div class="contradiction">⚡ 矛盾訊號：最大的矛盾訊號：官方宣稱聯合干預「效果顯著」，但彭博對日本央行帳戶數據的分析顯示8月3日沒有大規模干預跡象；同時日圓已從155.2回貶至157.55。也就是說，宣示效果與實際資金投入之間存在落差，市場正在用實際成交價格投票，而答案偏向懷疑。另一個矛盾：日本首相高市早苗同時推動370兆日圓的公私投資與財政擴張（等於放大利率上行與債務利息負擔），這與「守住日圓」的目標方向相反。</div><div class="scenarios">🔀 如果日圓在未來一個月內能站穩155以下（即升值突破155關卡），代表聯合干預的信譽建立，套利交易平倉壓力緩解，日經與台股的外資資金環境轉穩，10年期美債殖利率有機會回落至4.5%附近；如果日圓回貶至160以上且美日未再實際出手，市場將認定干預只是口水，日圓可能重測163甚至165，屆時日本央行被迫加速升息（目前政策利率遠低於美國3.50%–3.75%），全球套利交易將出現第二波去槓桿，台股外資賣壓與新台幣（目前32.447）貶值壓力同步放大。</div><div class="outlook"><p class="outlook-title">🔭 展望</p><p><strong>短期（1個月內）：</strong>短期（1個月內）：日圓大概率在155–160區間震盪，155是多頭續航的關鍵門檻。本週美國7月非農就業數據是最大變數，Kalshi預測市場對「新增就業超過8萬人」給出接近五五波的賠率；若數據偏冷，美元走弱有利日圓，反之則干預防線再受考驗。</p><p><strong>中期（3-6個月）：</strong>中期（3–6個月）：關鍵變數是日本央行的升息路徑與高市內閣的財政擴張規模。若日銀在年底前升息、同時美國通膨壓力迫使Fed轉鷹，美日利差收斂，日圓有機會回到150以內；但若日本財政赤字擴大推升JGB殖利率，反而會出現「升息也救不了匯率」的僵局。</p><p><strong>長期（1年以上）：</strong>長期（1年以上）：美國透過FIMA機制把外國央行的美元流動性納入常態化管理，實質上強化了美元體系的中心地位，也讓「美國財政部主導匯率政策」成為新常態。對亞洲出口國而言，未來匯率不再只是本國央行與市場的博弈，而是必須考慮華盛頓的偏好——這對台灣央行的匯率管理是新增的外部約束。</p></div><div class="watch-list">📡 持續追蹤：<ul><li>日圓兌美元155關卡是否有效突破</li><li>Fed FIMA repo 機制餘額週度變化</li><li>日本財務省每月匯市干預金額公告（次月初公布）</li><li>10年期美債殖利率是否守住4.7%</li><li>新台幣兌美元32.5關卡與央行進場頻率</li></ul></div>
+  <div class="interview-angle">💡 面試角度：國泰CIM會直接問：日圓套利交易反轉對你管理的債券部位有什麼含義？答題要能講出「日圓升值 → 日本壽險資金回流 → 美債與歐債外資買盤減弱 → 長端殖利率上行 → 存續期長的債券部位受創」這條鏈。元大投行法金與富邦證投銀組則會從企業避險角度切入：對日交易的台廠客戶要不要建議調整遠期外匯部位。中信MA投資專案可能問：如果你在評估一個日圓計價的海外投資案，這波匯率政策轉向會怎麼改變你的貼現率假設？</div>
+  <div class="interview-verbal">💬 口說版：「我認為這次美日聯手干預的重點不在日圓從163升到155.2這8點，而在美國選擇「賣歐元、不賣美債」並研議擴大Fed的FIMA機制——這代表美國財政部已經把匯率當常備政策工具，本質是自我保全，因為日本若拋美債守匯，10年期殖利率會直接衝破4.7%，美國房貸成本會再上去。以國泰CIM的投資組合角度，我會把日圓155當成觀察門檻：站穩155以下代表套利平倉風險緩解，可以續抱存續期較長的美元債；若回貶到160以上而美日沒有實際進場，我會傾向縮短存續期並提高現金部位。」</div>
+  <div class="sources"><a href="https://www.ft.com/content/1be83506-b897-4c26-97cc-445d7354ee6f?syn-25a6b1a6=1" target="_blank">Financial Times — Bessent's yen intervention signals new era of US 'currency activism'</a> ｜ <a href="https://www.cnbc.com/2026/08/03/bessent-fed-japan-yen-fima-repo-facility.html" target="_blank">CNBC — Federal Reserve may be pulled into Bessent's effort to support Japan's yen</a> ｜ <a href="https://www.cnbc.com/2026/08/04/cnbc-daily-open-yen-intervention-dollar-euro-fx.html" target="_blank">CNBC Daily Open — A U.S. yen intervention dressed in euros</a> ｜ <a href="https://www.bbc.co.uk/news/articles/cglj1pr0wjwo?at_medium=RSS&at_campaign=rss" target="_blank">BBC Business — US and Japan take action to prop up yen in rare joint move</a> ｜ <a href="https://www.ft.com/content/5de204a4-4db6-458c-aa9a-324e6bd5e766?syn-25a6b1a6=1" target="_blank">FT Markets — Japan vows further yen intervention with US if needed</a></div>
+  <div class="tw-sources"><span class="tw-label">🇹🇼 台灣報導：</span><a href="https://www.ctee.com.tw/news/20260804701842-430701" target="_blank">工商時報 — 美日罕見聯手護日圓 美國出手也為自身利益</a> ｜ <a href="https://www.ctee.com.tw/news/20260804701841-430701" target="_blank">工商時報 — 美日攜手拉抬日圓 155成多頭續航關鍵</a> ｜ <a href="https://money.udn.com/money/story/5599/9670584" target="_blank">經濟日報 — 日本央行帳戶數據顯示 沒有周一進行大規模匯市干預的明確跡象</a> ｜ <a href="https://money.udn.com/money/story/5599/9669068" target="_blank">經濟日報 — Evercore稱日本動用聯準會工具或考驗美日提振日圓的決心</a> ｜ <a href="https://www.cna.com.tw/news/aopl/202608040123.aspx" target="_blank">中央社 — 日圓守住美日聯手干預漲幅 市場警戒當局再出手</a></div>
+</article>
+<article class="card card-major" style="--section-color:#42A5F5">
+  <h3>Fed內部裂解為9比3 — 三位官員主張「立刻升息」對抗通膨，製造業調查顯示通膨憂慮「比疫情時期更糟」</h3>
+  <p class="label">發生什麼事</p><p class="body">聯邦公開市場委員會7月29日以9比3票決議維持聯邦資金利率於3.50%–3.75%不變，但三張反對票全部投向「升息」而非降息——明尼亞波利斯聯準銀行總裁Kashkari、克里夫蘭的Hammack與達拉斯的Logan都認為現在就必須對通膨採取行動。這是Warsh接任主席後的第二次會議，反對票數較6月增加。市場面的佐證更嚴峻：最新製造業採購經理人調查中，受訪者對通膨的評語被形容為「比疫情時代更糟」，採購經理描述環境高度波動、難以提前布局；債券天王Gundlach指出美債殖利率曲線的分歧走勢，正是投資人不相信Fed會真正貫徹抗通膨的證據。10年期美債殖利率4日上行2個基點至4.708%。通膨壓力的來源相當明確：美伊戰爭推升的油價（WTI自2月28日開戰以來漲約20%）、川普新一輪全球關稅，以及AI資料中心建置帶動的電力與工業品需求。</p><div class="interpretation">📐 解讀：重點不是Fed這次沒動，而是反對票的方向。過去兩年Fed內部的分歧幾乎都是「該不該降更快」，現在變成「該不該現在就升」——這是2022年以來政策風向的第一次實質翻轉。我判斷這波通膨是成本推動型（油價＋關稅＋AI電力需求）而非需求拉動型，這對Fed特別棘手，因為升息壓不下供給端衝擊，卻會直接壓垮已經6.66%的房貸市場。Gundlach說的殖利率曲線分歧，本質是市場在對Fed的公信力打折。</div><div class="transmission">🔗 美伊戰爭推升油價20%＋川普全球關稅 → 製造業投入成本上行、通膨預期脫錨 → Fed內部三票倒向升息、市場對降息預期消失 → 美債長端殖利率升至4.708%、30年期房貸衝上6.66%的一年新高 → 美國成屋交易與建商投資降溫 → 但同時企業財報「rock solid」、S&P 500獲利創五年最強 → 消費者承擔漲價、企業維持利潤率，K型分化加劇</div><div class="structural-tag">🏗️ 結構性 — 混合，但結構成分正在上升。油價是週期性的（一旦荷莫茲協議達成就會回落），但關稅與AI電力需求是結構性的——25個州告川普的關稅案即使勝訴也需時甚久，而資料中心用電需求只會往上。</div><div class="contradiction">⚡ 矛盾訊號：最明顯的矛盾：FT報導S&P 500企業獲利正邁向五年來最強，被形容為「rock solid」，但同一批報導也指出消費者正面臨更高的成本；麥當勞第二季銷售成長放緩並直言「預算緊縮的消費者仍承壓」，市值今年跌逾11%至約1,910億美元。企業能維持利潤率是因為成功轉嫁成本，但轉嫁的極限就是需求破口——麥當勞這種平價消費指標的疲弱，往往是領先訊號。</div><div class="scenarios">🔀 如果本週美國7月非農就業低於8萬人且時薪年增率回落，通膨與就業同步降溫的「軟著陸」敘事會回來，Fed三張升息票被邊緣化，10年期殖利率有機會回落至4.5%，成長股與房地產股反彈；如果非農超過12萬人且時薪加速，Fed在9月會議升息一碼的機率會被快速定價進去，10年期殖利率上探5.0%，屆時所有高本益比的AI相關資產（含台股記憶體與AI伺服器族群）都會面臨評價壓縮，而不是基本面問題。</div><div class="outlook"><p class="outlook-title">🔭 展望</p><p><strong>短期（1個月內）：</strong>短期（1個月內）：Fed 9月會議前不太可能有實際動作，但點陣圖與會議紀要的鷹派程度會是市場焦點。10年期殖利率預期在4.6%–4.9%區間，前提是荷莫茲協議談成、油價不再上衝。</p><p><strong>中期（3-6個月）：</strong>中期（3–6個月）：關鍵變數是關稅的司法結果與油價。若25州訴訟推翻部分關稅、且中東停火成形，通膨壓力可望在第四季實質緩解，Fed維持利率不變到年底的機率最高；若兩者皆未實現，2027年初升息一碼並非不可能。</p><p><strong>長期（1年以上）：</strong>長期（1年以上）：美國正在進入「較高的中性利率」時代——財政赤字未收斂（FT指出各國政府已停止修正預算赤字而債市迄今容忍）、關稅推高進口成本、AI基建吃電。實質中性利率上移意味著所有長天期資產的估值中樞下修，這是未來幾年資產配置最重要的單一假設變動。</p></div><div class="watch-list">📡 持續追蹤：<ul><li>8/7美國7月非農就業與時薪年增率</li><li>Fed 9月會議升息票數是否從3票增加</li><li>10年期美債殖利率4.7%與5.0%兩道關卡</li><li>30年期房貸利率6.66%是否續創高</li><li>美國核心PCE年增率月度變化</li></ul></div>
+  <div class="interview-angle">💡 面試角度：國泰CIM必考：「Fed內部有人主張升息，你怎麼調整債券部位？」答題核心是存續期管理與曲線形狀判斷，不是猜方向。中信MA投資專案會問：折現率假設要不要調？如果你的財務模型用了2%的無風險利率，現在4.7%的10年期殖利率會讓IRR門檻整個抬高。開發資本基礎建設投資角度最尖銳：基建案的融資成本與長天期現金流最敏感，殖利率上行100個基點對一個20年期專案的NPV影響可能達雙位數百分比，面試官會想聽你講出這個量級感。</div>
+  <div class="interview-verbal">💬 口說版：「我覺得這次FOMC最重要的訊息不是9比3維持利率不變，而是三張反對票全部投向升息——這是2022年以來第一次政策風向實質翻轉。我判斷這波是成本推動型通膨，油價自2月開戰漲20%加上新一輪關稅，升息其實壓不下供給端衝擊，卻會直接打到已經6.66%的房貸市場。所以如果是開發資本的基建投資案，我會建議把無風險利率假設從過去的低檔往上調到4.5%–5%這個區間做敏感度分析，因為長天期專案的NPV對貼現率的彈性非常高，這比猜Fed下一步更實際。」</div>
+  <div class="sources"><a href="https://www.cnbc.com/2026/07/29/fed-rate-decision-july-2026.html" target="_blank">CNBC — Divided Fed holds interest rates steady, but three members voted to hike</a> ｜ <a href="https://www.cnbc.com/2026/07/31/fed-officials-who-voted-to-hike-rates-say-action-is-needed-now-against-inflation.html" target="_blank">CNBC — Fed officials who voted to hike rates say action is needed now against inflation</a> ｜ <a href="https://www.cnbc.com/2026/08/03/manufacturing-survey-shows-inflation-worries-adding-to-pressure-on-fed.html" target="_blank">CNBC — Manufacturing survey shows inflation worries 'worse than pandemic era'</a> ｜ <a href="https://www.cnbc.com/2026/07/29/gundlach-says-the-bond-market-is-signaling-the-fed-has-to-act-on-inflation.html" target="_blank">CNBC — Gundlach says the bond market is signaling the Fed has to act on inflation</a> ｜ <a href="https://www.npr.org/2026/07/30/nx-s1-5913851/mortgage-rates-one-year-high-july-2026" target="_blank">NPR Business — Mortgage rates hit their highest level in a year</a></div>
+  <div class="tw-sources"><span class="tw-label">🇹🇼 台灣報導：</span><a href="https://money.udn.com/money/story/5613/9670225" target="_blank">經濟日報 — 年息衝3.95% 合庫美元定存優利專案（內含Fed 7/29維持3.50%–3.75%）</a></div>
+</article>
+<article class="card card-major" style="--section-color:#42A5F5">
+  <h3>🔄 25州聯合控告川普政府新一輪全球關稅（持續追蹤）</h3>
+  <p class="label">發生什麼事</p><p class="body">25個州8月3日聯合向法院提告川普政府，主張其最新一輪針對約60個貿易夥伴、以「未能處理強迫勞動」為由（Section 301 強迫勞動關稅）課徵的關稅，實質上是在非法替換先前已被法院推翻的關稅措施。這是行政部門與州政府在貿易權限上的第二輪法律攻防，前一輪關稅已遭司法否決，白宮改用新的法律依據重新開徵，州方認為這構成規避法院判決。</p><p class="label">關鍵數據</p><p class="body">涉及約60個美國貿易夥伴；25州為原告；前一輪同性質關稅已遭法院推翻</p><div class="interpretation">📐 解讀：這件事的重要性被低估了。市場普遍把關稅當成已知變數並且price in了，但司法風險是一個雙向的未定價選項——如果州方勝訴，等於企業已繳的關稅可能退款（蘋果就宣布要把可觀的關稅退款投入美國製造），這對進口密集型企業的獲利是意外驚喜；如果政府勝訴，代表行政部門可以用不同法律依據無限重開關稅，貿易政策的不確定性會被制度化。真正的訊號是：關稅已從「經濟政策」變成「憲政權限之爭」，這種爭議的時間軸通常以年計。</div><div class="transmission">🔗 法院推翻第一輪關稅 → 白宮換法律依據（Section 301強迫勞動）重開徵 → 25州提告主張規避判決 → 企業面臨「已繳關稅可能退款、也可能再加碼」的雙向不確定 → 供應鏈布局決策延後、資本支出遞延 → 對台灣ODM廠（緯創已宣布擴大台美越三地布局）而言，分散產能的成本必須當成長期固定成本而非一次性支出</div><div class="scenarios">🔀 如果法院核發禁制令暫停徵收，蘋果模式（退款轉投資美國製造）會被更多企業複製，美國製造業投資出現一波脈衝；如果最高法院最終支持行政部門，關稅將成為結構性成本，台灣ODM在美國設廠的溢價（人力成本約為台灣3–4倍）必須完全轉嫁給品牌客戶，屆時毛利率談判會是產業焦點。</div><div class="outlook"><p class="outlook-title">🔭 展望</p><p><strong>短期（1個月內）：</strong>短期（1個月內）：不會有終局判決，但法院是否核發暫時禁制令是關鍵。若核發，短線利多進口零售與消費電子；若駁回，關稅將持續徵收。</p><p><strong>中期（3-6個月）：</strong>中期（3–6個月）：案件很可能上訴至最高法院。對台廠的實質影響是：美國生產基地的建置決策無法再等待政策明朗，緯創、融程電（加速擴大美國製造）都已選擇提前布局，這條路一旦走上就是不可逆的資本承諾。</p></div>
+  
+  <div class="interview-verbal">💬 口說版：「25個州告川普關稅這件事，我覺得市場定價不足。重點不是關稅本身——那已經price in了——而是這變成憲政權限之爭，時間軸以年計，企業面臨的是「已繳關稅可能退款、也可能再加碼」的雙向不確定。以富邦證投銀組輔導台廠籌資的角度，這代表客戶的美國設廠計畫不能等政策明朗，緯創已經公告要同時擴充台灣、美國、越南產能並發GDR籌資，這就是把政策不確定性內化成資本結構決策，我認為這才是投銀最該協助客戶思考的層次。」</div>
+  <div class="sources"><a href="https://www.cnbc.com/2026/08/03/trump-tariffs-25-states-lawsuit-supreme-court.html" target="_blank">CNBC — Twenty five states sue Trump administration over latest global tariffs</a> ｜ <a href="https://www.bbc.co.uk/news/articles/czjlvrd9e43o?at_medium=RSS&at_campaign=rss" target="_blank">BBC Business — US states sue to block Trump tariffs impacting dozens of countries</a></div>
+  <div class="tw-sources"><span class="tw-label">🇹🇼 台灣報導：</span><a href="https://money.udn.com/money/story/5710/9670579" target="_blank">經濟日報 — 緯創持續擴大投資規模 將發行GDR進行海外籌資</a> ｜ <a href="https://money.udn.com/money/story/5612/9670600" target="_blank">經濟日報 — 緯創第2季每股賺4.72元續創新高 擴大台美越布局</a></div>
+</article>
+<article class="card card-brief">
+  <p>📎 <strong>日本對中韓熱鍍鋅鋼帶、鋼板課徵臨時反傾銷稅29.2%–55.3%：</strong>日本財務省與經產省4日宣布，自8月8日起至12月7日止，對中國與韓國產的熱鍍鋅鋼帶與鋼板課徵29.2%至55.3%的臨時反傾銷稅；這類材料主要用於建築與汽車，是東亞鋼鐵過剩產能外溢的最新一起貿易摩擦。</p>
+  <div class="sources"><a href="https://www.ctee.com.tw/news/20260804701455-430701" target="_blank">工商時報（引彭博）— 日本將鎖定中韓部分鋼鐵產品 徵暫時性反傾銷稅</a></div>
+  <div class="tw-sources"><span class="tw-label">🇹🇼 台灣報導：</span><a href="https://www.cna.com.tw/news/aopl/202608040197.aspx" target="_blank">中央社 — 日本將鎖定中韓部分鋼鐵產品 徵暫時性反傾銷稅</a></div>
+</article>
+
+</section>
+<section class="section">
+  <div class="section-header">
+    <span class="section-dot" style="background:#AB47BC;color:#AB47BC"></span>
+    <h2>🏢 不動產 / 私募</h2>
+  </div>
+  <article class="card card-major" style="--section-color:#AB47BC">
+  <h3>Prologis以140億英鎊收購Segro — 全球最大物流地產商吃下歐洲最大同業，倫敦上市公司被收購潮再添一筆</h3>
+  <p class="label">發生什麼事</p><p class="body">美國物流地產龍頭Prologis提出140億英鎊（約185億美元）收購要約，已獲倫敦掛牌的歐洲最大工業／物流REIT Segro董事會接受。這是今年一連串倫敦上市公司被收購案的最新一筆，此前已有資產管理公司Schroders與檢驗認證集團Intertek相繼易主。Segro是英國與歐陸大型倉儲物流資產的主要持有者，資產組合高度集中在都會區周邊的「最後一哩」配送設施與資料中心用地。Prologis本身是全球市值最大的REIT，長期以「物流地產＋再生能源＋資料中心」三軌並進為戰略。這筆交易的時點相當關鍵：同一天FT報導私募巨頭Apollo坦承在「持續演變的退場環境」下「審慎延後」了資產出售，導致其變現表現落後同業，顯示一級市場的退場管道並不順暢。</p><div class="interpretation">📐 解讀：這是一筆典型的「公開市場折價套利」交易，本質是英國REIT的股價長期低於重估後淨資產價值（NAV），讓美元資產負債表強大的買方可以用折價買到實體資產。我的判斷是：這不是英國房地產的復甦訊號，而是英國資本市場的估值折價訊號——倫敦掛牌公司連續被美國買家收購（Schroders、Intertek、現在Segro），共同點是本益比與NAV折價都明顯低於美國同業。更深層的意義在於，物流地產已經不是「倉庫」這個舊分類，而是AI資料中心與電商配送的實體基礎設施，Prologis買的其實是土地與電力併網權。</div><div class="transmission">🔗 英國REIT股價長期低於NAV → 美元強勢＋美國REIT取得資金成本優勢 → 跨境收購倫敦掛牌標的（Schroders→Intertek→Segro） → 倫敦市場優質標的減少、指數代表性下降 → 更多英國公司選擇被收購或赴美掛牌 → 歐洲公開股權市場空洞化，而私募與美國買方取得定價權</div><div class="structural-tag">🏗️ 結構性 — 結構性。判斷依據：這是連續第三起大型倫敦掛牌公司被美方收購，且橫跨資產管理、檢驗、地產三個不相關產業——共通變數是「倫敦掛牌」本身的估值折價，而非任何單一產業的週期位置。</div><div class="contradiction">⚡ 矛盾訊號：矛盾訊號很明顯：Prologis願意用140億英鎊買下實體物流資產，代表買方認為長期現金流價值被低估；但同一天Apollo表示因為「退場環境演變」而延後資產出售，代表賣方認為現在賣不到好價錢。同一個資產類別、同一個時點，一邊積極買、一邊延後賣——差別在於資金成本與持有期限：Prologis是永續持有的策略性買家，Apollo是有基金存續期壓力的財務投資人。這說明目前不動產市場的定價權正在從財務投資人移向策略投資人。</div><div class="scenarios">🔀 如果Prologis-Segro案順利完成且未遭英國反壟斷或國安審查阻撓，未來6個月內倫敦市場很可能再出現2–3起同規模的跨境收購，英國政府對「公開市場空洞化」的政治壓力將升高，不排除討論收購門檻新規；如果交易遭遇監管阻力或Segro股東要求提價，則會發出「倫敦折價已經被市場修正」的訊號，反而可能觸發英國REIT族群一波重估行情。</div><div class="outlook"><p class="outlook-title">🔭 展望</p><p><strong>短期（1個月內）：</strong>短期（1個月內）：關注是否有競價者出現。以Segro的資產品質與Prologis的溢價幅度，其他物流REIT或主權基金加入競標並非不可能，屆時成交價可能上修5%–10%。</p><p><strong>中期（3-6個月）：</strong>中期（3–6個月）：物流地產的估值錨會從「租金收益率」轉向「電力併網容量」。Segro與Prologis手上都有可轉作資料中心的都會區土地，這部分的隱含價值在傳統REIT估值模型裡被嚴重低估，未來六個月市場會開始重新定價這塊。</p><p><strong>長期（1年以上）：</strong>長期（1年以上）：全球物流／工業地產將加速集中到少數幾家超大型平台手中。對台灣的意義是，未來台廠在歐洲布局倉儲時，議價對手會從分散的在地業主變成單一寡占平台，租金談判的結構性劣勢會浮現。</p></div><div class="watch-list">📡 持續追蹤：<ul><li>是否出現競價者、最終成交溢價幅度</li><li>英國競爭與市場管理局（CMA）是否啟動審查</li><li>Apollo等私募巨頭第三季的資產處分（realization）金額</li><li>歐洲物流地產的資本化率（cap rate）走勢</li><li>倫敦掛牌公司下一起被收購標的</li></ul></div>
+  <div class="interview-angle">💡 面試角度：中信MA投資專案與開發資本基礎建設投資是這題的正中紅心。中信會問：「這筆交易的估值怎麼算？你會用NAV折價、cap rate還是DCF？」正確答法是三者交叉驗證，並強調物流地產的關鍵變數已從租金轉向電力併網容量。開發資本則會問投後管理：買下Segro之後，Prologis要怎麼把倉庫改造成資料中心？CAPEX與許可時程是什麼？富邦證投銀組角度可以談：為什麼英國公司寧願被收購也不願留在倫敦掛牌，這對台灣企業選擇上市地點有什麼啟示。</div>
+  <div class="interview-verbal">💬 口說版：「Prologis用140億英鎊收購Segro，我認為市場解讀成「英國房地產復甦」是錯的，真正的訊號是倫敦掛牌本身的估值折價——今年已經連續三起，Schroders、Intertek、現在Segro，橫跨三個不相關產業，共同變數只有「在倫敦掛牌」。更值得注意的是，Prologis買的其實不是倉庫，是都會區的土地與電力併網權，這在傳統REIT的租金收益率模型裡完全沒被定價。如果是中信投資專案在評估類似案子，我會建議把估值拆成兩層：現有租約的DCF，加上可轉作資料中心土地的選擇權價值，而後者的關鍵假設是電網容量與許可時程，不是租金。」</div>
+  <div class="sources"><a href="https://www.ft.com/content/1d8ac0ff-8ff0-44fd-bd92-5fd18983f31e?syn-25a6b1a6=1" target="_blank">FT Companies — Segro accepts £14bn takeover offer from US rival Prologis</a> ｜ <a href="https://www.ft.com/content/b1f9689d-a31e-4b6e-8a13-38e7caf7d92d?syn-25a6b1a6=1" target="_blank">FT Markets — Apollo misses out on big asset sales that have boosted rivals</a></div>
+  
+</article>
+<article class="card card-major" style="--section-color:#AB47BC">
+  <h3>私募退場環境惡化 — Apollo「審慎延後」資產出售落後同業，同時big pharma醞釀4,000億美元超級併購</h3>
+  <p class="label">發生什麼事</p><p class="body">私募資本巨頭Apollo在最新財報溝通中表示，因為「退場環境持續演變」而「審慎地延後」了資產出售，導致其變現（realization）表現明顯落後於已完成大額處分的同業。這在私募產業是相當坦白的說法——實質意義是買方出價達不到帳上估值，賣了就要認列減損。與此形成強烈對比的是併購市場另一端：FT報導阿斯特捷利康（AstraZeneca）正與必治妥施貴寶（Bristol Myers Squibb）洽談合併，若成局將創造市值全球第四大的製藥集團，交易規模上看4,000億美元。但AZ的股東已對此表達疑慮，質疑兩家公司共同面臨的專利懸崖（patent cliff）與反壟斷風險。另一方面，離岸法律服務業也出現私募資金湧入的跡象：投資機構MML買下澤西島法律事務所Mourant的27%股權。</p><div class="interpretation">📐 解讀：把這三件事放在一起看，就能看出目前資本市場的真實結構：策略性買家（Prologis、AstraZeneca）在動，財務投資人（Apollo）在等。這代表資產價格的定價權暫時落在有永續資產負債表與產業綜效的一方，純財務槓桿模型難以出價。我判斷這是利率結構性上移的必然結果——當無風險利率從接近零升到4.7%，LBO模型的槓桿倍數與退場倍數假設同時被壓縮，財務投資人的出價自然低於策略買家。Apollo的「審慎延後」是專業說法，白話是「現在賣會賠」。</div><div class="transmission">🔗 無風險利率升至4.7% → LBO槓桿倍數與退場倍數假設同步壓縮 → 財務投資人出價能力下降 → 私募基金延後處分、DPI（已分配倍數）惡化 → LP現金回流減少、新基金募集困難 → 私募二級市場（secondaries）與延續型基金（continuation fund）需求爆增 → 策略性買家取得定價權，產業整併加速</div><div class="structural-tag">🏗️ 結構性 — 結構性。判斷依據：這不是單一季度的市場情緒問題，而是貼現率中樞上移導致的估值模型重寫；除非利率回到2%以下，否則財務投資人與策略買家的出價差距不會收斂。</div><div class="contradiction">⚡ 矛盾訊號：市場說法的矛盾在於：私募業普遍宣稱「乾火藥（dry powder）創新高、準備逢低進場」，但Apollo實際上是延後賣、不是加速買。這說明dry powder的統計數字掩蓋了真相——LP的資金承諾（commitment）雖高，但因為既有基金遲遲無法變現分配，LP的實際可動用現金並不寬裕，新的資本呼叫（capital call）能力受限。</div><div class="scenarios">🔀 如果Fed在年底前釋出降息訊號、10年期殖利率回落至4.3%以下，私募退場窗口會在2027上半年重新打開，屆時累積的待售資產一次釋出，會壓抑成交價格但拉高交易量；如果殖利率維持4.7%以上超過六個月，延續型基金與二級市場折價會擴大到NAV的15%–25%，部分中型私募基金將面臨無法募集下一期基金而退出市場。</div><div class="outlook"><p class="outlook-title">🔭 展望</p><p><strong>短期（1個月內）：</strong>短期（1個月內）：AZ與BMS的合併談判是最大看點。若正式宣布，將成為今年最大單一併購案，並可能觸發製藥業第二輪整併；但股東對專利懸崖與反壟斷的疑慮，讓破局機率不低。</p><p><strong>中期（3-6個月）：</strong>中期（3–6個月）：私募二級市場成交量預期續創新高，折價幅度是關鍵指標。若折價收斂至10%以內，代表退場環境好轉；擴大至20%以上則代表壓力升級。</p><p><strong>長期（1年以上）：</strong>長期（1年以上）：私募產業的商業模式將從「買進—加槓桿—賣出」轉向「買進—營運改善—長期持有」，這對人才需求的意義是：產業營運經驗的權重會超過純財務工程能力。</p></div><div class="watch-list">📡 持續追蹤：<ul><li>AZ–BMS合併是否正式宣布及交易架構</li><li>Apollo與同業的季度realization金額比較</li><li>私募二級市場平均折價率</li><li>美國高收益債（junk bond）利差走勢</li><li>全球併購案件金額的策略買家vs財務買家占比</li></ul></div>
+  <div class="interview-angle">💡 面試角度：中信MA投資專案這題必問到底：「私募退場環境變差，你評估一個投資案時會怎麼調整？」核心答法是把退場倍數（exit multiple）假設下修，並且延長持有期假設，然後看IRR還撐不撐得住。開發資本基礎建設投資角度更有利：基建資產現金流穩定、持有期本來就長，在財務投資人退場困難的環境下，反而是相對受青睞的資產類別，這是他們的賣點。元大投行法金與富邦證投銀組則可以談：企業客戶如果要出售非核心事業，現在該賣給策略買家而非私募，價格會好很多。</div>
+  <div class="interview-verbal">💬 口說版：「Apollo說因為「退場環境演變」而審慎延後資產出售，這句話白話講就是現在賣會認列減損。我認為這是無風險利率從接近零升到4.7%的必然結果——LBO模型的槓桿倍數跟退場倍數同時被壓縮，財務投資人的出價自然贏不過Prologis、AstraZeneca這種有永續資產負債表跟產業綜效的策略買家。以中信投資專案的角度，我評估案子時會做兩件事：一是把退場倍數假設從進場倍數往下調而不是持平，二是把持有期從五年延長到七年做敏感度測試，如果IRR在這個情境下還能過門檻，這個案子才算真的穩健。」</div>
+  <div class="sources"><a href="https://www.ft.com/content/b1f9689d-a31e-4b6e-8a13-38e7caf7d92d?syn-25a6b1a6=1" target="_blank">FT Markets — Apollo misses out on big asset sales that have boosted rivals</a> ｜ <a href="https://www.ft.com/content/450555e6-f4b6-4c4d-b9fa-c4f48c833c57?syn-25a6b1a6=1" target="_blank">FT Companies — The $400bn megadeal brewing in big pharma</a> ｜ <a href="https://www.ft.com/content/6d40c74b-ac40-42f1-9387-957925f48daa?syn-25a6b1a6=1" target="_blank">FT Companies — AstraZeneca investors raise concerns over mega-merger talks</a> ｜ <a href="https://www.ft.com/content/18ccb15a-f8ed-41ba-a948-7c62cd757274?syn-25a6b1a6=1" target="_blank">FT Markets — Offshore firm Mourant sells stake in private equity rush for legal deals</a></div>
+  <div class="tw-sources"><span class="tw-label">🇹🇼 台灣報導：</span><a href="https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=765afc04-af9b-4dd3-a3c4-5d7e5b9d9826&utm_source=9626665718662657185996571859&utm_medium=RSS" target="_blank">MoneyDJ — 傳兩大製藥巨頭AZ、BMS可能合併？市場質疑</a></div>
+</article>
+<article class="card card-major" style="--section-color:#AB47BC">
+  <h3>🔄 美國30年期房貸利率升至6.66%創一年新高，戰爭與通膨雙重推力（持續追蹤）</h3>
+  <p class="label">發生什麼事</p><p class="body">30年期固定房貸平均利率上週四升至6.66%，創一年來新高，直接推力是美伊戰爭推升的油價與隨之而來的通膨疑慮，透過10年期美債殖利率（4.708%）傳導至房貸市場。同一時間，舊金山因AI從業人員財富效應，房價中位數升至170萬美元的歷史新高，形成極端的區域分化：全國房貸成本上升壓抑需求，但AI財富集中的少數都會區房價脫離基本面。英國方面則出現相反的政策方向，房貸監管放寬讓首購族更容易取得貸款，但同時伴隨風險。</p><p class="label">關鍵數據</p><p class="body">美國30年期固定房貸利率6.66%（一年新高）；10年期美債殖利率4.708%；舊金山房價中位數170萬美元（歷史新高）</p><div class="interpretation">📐 解讀：美國住宅市場正在經歷「利率鎖定效應」與「AI財富效應」的拉鋸。前者壓抑成交量（既有屋主鎖在3%的舊房貸不願賣），後者推升特定區域房價。我判斷這種分化會持續擴大，因為兩股力量的驅動因子完全不同：利率由Fed與戰爭決定，AI財富由少數科技公司的股價決定。真正的風險在於，如果AI股出現持續性修正（Situational Awareness對沖基金崩盤已是預警），舊金山這類極端市場的回檔幅度會遠大於全國平均。</div><div class="transmission">🔗 美伊戰爭推升油價 → 通膨預期上行 → 10年期美債殖利率4.708% → 30年期房貸利率6.66% → 首購族負擔能力惡化、成交量萎縮 → 建商新屋開工放緩 → 建材、家電需求降溫（Wayfair卻報出2020年以來最強美國成長，形成矛盾） → 但AI財富集中區域（舊金山中位數170萬美元）逆勢創高，區域分化極端化</div><div class="scenarios">🔀 如果Fed三張升息票的主張成真、房貸利率突破7%，美國成屋銷售年化戶數可能跌破400萬戶的長期低檔，建商股與家居零售面臨系統性壓力；如果中東停火成形且油價回落至每桶80美元以下，房貸利率回到6.3%附近，被壓抑的首購需求會集中釋放，反而帶來一波脈衝式反彈。</div><div class="outlook"><p class="outlook-title">🔭 展望</p><p><strong>短期（1個月內）：</strong>短期（1個月內）：房貸利率跟隨10年期殖利率，預期在6.4%–6.9%區間。若荷莫茲協議達成、油價回落，有機會回到6.5%以下。</p><p><strong>中期（3-6個月）：</strong>中期（3–6個月）：秋季購屋旺季表現是關鍵。若在6.5%以上的利率環境下成交量仍萎縮，建商將被迫加大價格讓步，屆時全國房價指數可能首度出現年減。</p></div>
+  
+  <div class="interview-verbal">💬 口說版：「美國房貸利率升到6.66%的一年新高，但舊金山房價中位數卻創170萬美元新高，我覺得這個分化才是重點——它說明美國住宅市場已經被拆成兩個市場：一個由Fed跟油價決定，一個由AI股價決定。以國泰CIM的資產配置角度，這代表美國不動產相關資產不能再當成單一資產類別看待，要拆開看。而且風險是不對稱的：如果AI股出現持續修正——Situational Awareness那檔450億美元的AI對沖基金幾天內崩掉就是預警——舊金山這種極端市場的回檔幅度會遠大於全國平均，因為它的支撐完全來自股票財富效應而非所得。」</div>
+  <div class="sources"><a href="https://www.npr.org/2026/07/30/nx-s1-5913851/mortgage-rates-one-year-high-july-2026" target="_blank">NPR Business — Mortgage rates hit their highest level in a year, driven by war and inflation concerns</a> ｜ <a href="https://www.bbc.co.uk/news/articles/cglj1pr0wjwo?at_medium=RSS&at_campaign=rss" target="_blank">BBC Business — Wealthy AI workers send San Francisco house prices soaring</a> ｜ <a href="https://www.cnbc.com/2026/08/03/yen-us-intervention-japan-market-currency.html" target="_blank">CNBC World — Treasury yields move higher as investors mull uncertainty around peace talks</a></div>
+  
+</article>
+<article class="card card-brief">
+  <p>📎 <strong>中國萬科巨額虧損，房地產危機蔓延至最後的「模範生」：</strong>中國指標性房地產開發商萬科公布巨額虧損，市場關注房地產危機是否進一步擴散，以及中國政府是否會出手介入；萬科長期被視為中國房企中財務最穩健的一家，其虧損意味著這波下行已不再侷限於高槓桿民企。</p>
+  <div class="sources"><a href="https://www.wsj.com/articles/even-chinas-property-stalwart-isnt-immune-from-the-crisis-19799863" target="_blank">WSJ World — Leading China Property Developer Reports Huge Loss, in Sign of Widening Real-Estate Woes</a></div>
+  <div class="tw-sources"><span class="tw-label">🇹🇼 台灣報導：</span><a href="https://ec.ltn.com.tw/article/breakingnews/5528401" target="_blank">自由財經 — 中國各地爭相布局6大未來產業 官媒：恐陷重複建設亂燒錢風險</a></div>
+</article>
+
+</section>
+<section class="section">
+  <div class="section-header">
+    <span class="section-dot" style="background:#66BB6A;color:#66BB6A"></span>
+    <h2>🤖 AI / 半導體</h2>
+  </div>
+  <article class="card card-major" style="--section-color:#66BB6A">
+  <h3>Google為Anthropic打造2,000億美元華爾街融資機器 — 私募信貸、晶片租賃、資料中心擔保，AI資本支出正在把風險轉進信貸市場</h3>
+  <p class="label">發生什麼事</p><p class="body">FT深度報導揭露Google為Anthropic架構了一套規模達2,000億美元的融資機制，核心元件包括三項：私募信貸（private credit）、晶片租賃（chip leases）與資料中心擔保（data centre guarantees）。這套架構的本質是讓AI基礎設施的巨額資本支出不必全部反映在科技巨頭自己的資產負債表上，而是透過結構化融資分散給私募信貸基金、租賃公司與債權人。這與同期揭露的兩個現象互為表裡：第一，CNBC統計亞馬遜、Alphabet與特斯拉最新一季全數出現負自由現金流，Meta的現金產生能力更暴跌91%，AI建置的價格標籤持續膨脹；第二，CNBC指出科技巨頭對Anthropic與OpenAI等私人AI公司的持股投資利益，正在扭曲整體企業獲利面貌——若剔除這些未實現投資收益，財報故事遠沒有帳面上樂觀。</p><div class="interpretation">📐 解讀：這是這一輪AI週期最重要、也最被低估的結構性變化：AI資本支出正在從「股權融資」轉向「債權與結構化融資」。股權融資的損失由股東承擔、市場即時定價；債權與租賃融資的風險則沉澱在私募信貸基金、保險公司資產負債表與租賃合約裡，缺乏即時定價機制。我的判斷是，AI泡沫如果破裂，這次的傳導路徑不會像2000年那樣主要透過股市，而是透過信貸市場——這就是為什麼FT同時報導「高收益債的第二春」與「保險公司私募信貸持倉遭調查」（Walter旗下保險公司支付數百萬美元給信評機構Egan-Jones）這兩件事值得放在一起看。晶片租賃尤其危險：GPU的技術折舊速度遠快於會計折舊，租賃合約把殘值風險轉給了出租方。</div><div class="transmission">🔗 AI模型訓練成本指數上升 → 科技巨頭自由現金流轉負（Meta現金產生-91%） → 改以私募信貸＋晶片租賃＋資料中心擔保進行表外融資 → 風險移轉至私募信貸基金與保險公司資產負債表 → 若AI變現不如預期或GPU折舊加速 → 信貸損失在無即時定價的市場中累積 → 保險業資本適足與私募信貸基金淨值同時受衝擊 → 對系統的傳導比股市修正更慢但更難處理</div><div class="structural-tag">🏗️ 結構性 — 結構性。判斷依據：這是AI產業融資模式的根本重構，不是景氣循環中的融資條件鬆緊；一旦晶片租賃與資料中心擔保成為標準做法，它會改變整個科技業的資本結構常態。</div><div class="contradiction">⚡ 矛盾訊號：最尖銳的矛盾：市場正在慶祝S&P 500獲利創五年最強、亞馬遜市值首破3兆美元（AI與雲端動能強勁），但CNBC明確指出這批獲利有相當部分來自對Anthropic、OpenAI等私人公司持股的評價收益——這是未實現、未變現、且由科技巨頭自己參與定價的循環性收益。同時，Palantir執行長Karp公開抨擊前沿AI實驗室「試圖讓我們上癮」、「把各地的智慧財產價值都蒸餾走了」，而Hugging Face執行長則說中國在開源模型上正在贏。MoneyDJ更報導DeepSeek新模型成本比Claude低百倍。也就是說，在融資規模衝上2,000億美元的同時，技術護城河的敘事正在被質疑。</div><div class="scenarios">🔀 如果2027年前AI應用端的營收成長能追上資本支出（例如微軟Copilot付費席次已突破3,000萬席、單季淨增席次較前季倍增，這是正面訊號），這套融資架構會被視為金融創新，私募信貸將成為AI基建的常態資金來源；如果AI變現速度低於預期、或中國開源模型（阿里Qwen3.8-Max、DeepSeek成本低百倍）持續壓縮定價能力，2,000億美元的債務結構將面臨重新協商，屆時最先出問題的不是科技股，而是持有這些債權的私募信貸基金與保險公司——建議關注美國高收益債利差是否在AI相關發行人身上出現異常擴大。</div><div class="outlook"><p class="outlook-title">🔭 展望</p><p><strong>短期（1個月內）：</strong>短期（1個月內）：關注美國高收益債利差與私募信貸基金的季度淨值揭露。AI對沖基金已出現實質傷亡（Situational Awareness數日內崩跌、Coatue旗下基金7月跌8.3%、Millennium跌2.1%），信貸端的壓力訊號可能在第三季財報浮現。</p><p><strong>中期（3-6個月）：</strong>中期（3–6個月）：GPU租賃合約的殘值假設將成為爭議焦點。若下一代加速器的效能／成本比大幅改善，現有租賃資產的市價會低於帳面，出租方需認列減損。同時，記憶體成本飆漲（見下一則）會進一步推升AI建置的單位成本。</p><p><strong>長期（1年以上）：</strong>長期（1年以上）：AI基礎設施的融資模式將決定這輪週期的結局形態。若表外融資成為常態，監管機關（特別是保險業監理）勢必介入，屆時資金成本上升會直接壓抑資料中心的擴建速度——這對台灣的AI伺服器供應鏈（緯創、廣達等）是最需要提前掌握的下行風險。</p></div><div class="watch-list">📡 持續追蹤：<ul><li>AI相關發行人的高收益債利差</li><li>私募信貸基金季度淨值與違約率</li><li>科技巨頭自由現金流（Meta、Alphabet、Amazon）</li><li>GPU租賃合約的殘值假設與減損認列</li><li>微軟Copilot付費席次成長率（AI變現的關鍵指標）</li></ul></div>
+  <div class="interview-angle">💡 面試角度：這題是中信MA投資專案與國泰CIM的黃金題材。中信會問：「私募信貸的風險怎麼定價？」你要能講出這套架構的三個元件與各自的風險移轉對象。國泰CIM角度：如果你的投資組合裡有私募信貸或保險公司債，AI資本支出的表外融資會怎麼影響信用風險？開發資本基礎建設投資角度最直接——資料中心就是基礎建設，你要能討論這類資產的融資結構、殘值假設與長期現金流穩定性。富邦證投銀組可以談：為什麼這些AI公司選擇債權而非股權融資，這對IPO時程的含義是什麼。</div>
+  <div class="interview-verbal">💬 口說版：「Google為Anthropic做的這套2,000億美元融資架構，我認為是這輪AI週期最被低估的結構性變化——它把AI資本支出從股權融資推向私募信貸、晶片租賃跟資料中心擔保這類表外結構。這件事的意義在於風險的落點變了：股權損失由股東承擔且市場即時定價，但債權跟租賃的風險是沉澱在私募信貸基金跟保險公司的帳上，沒有即時定價機制。如果是中信投資專案在評估相關案子，我最在意的單一假設是GPU租賃的殘值——晶片的技術折舊遠快過會計折舊，而租賃合約等於把殘值風險全押在出租方身上，這是我會第一個做壓力測試的地方。」</div>
+  <div class="sources"><a href="https://www.ft.com/content/549f2e23-5aa2-49c7-9ea6-a9784ab7087c?syn-25a6b1a6=1" target="_blank">Financial Times — Inside Google's $200bn Wall Street finance machine for Anthropic</a> ｜ <a href="https://www.cnbc.com/2026/07/31/tech-earnings-cash-memory-ai.html" target="_blank">CNBC Technology — Dwindling cash and soaring memory costs: Tech's AI buildout has ballooning price tag</a> ｜ <a href="https://www.cnbc.com/2026/08/03/alibaba-ai-model-qwen-rival-anthropic.html" target="_blank">CNBC World — Big Tech's Anthropic and OpenAI stakes are distorting the corporate earnings picture</a> ｜ <a href="https://www.ft.com/content/18ccb15a-f8ed-41ba-a948-7c62cd757274?syn-25a6b1a6=1" target="_blank">FT Markets — Walter insurers paid millions of dollars to credit rating provider Egan-Jones</a></div>
+  <div class="tw-sources"><span class="tw-label">🇹🇼 台灣報導：</span><a href="https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=e71017e0-65de-443a-be8a-a44ad1b3d66a&utm_source=9626665718662657185996571859&utm_medium=RSS" target="_blank">MoneyDJ — DeepSeek新模型「打到骨折」成本比Claude低百倍</a> ｜ <a href="https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=b78247d6-aff7-4f50-8550-02435da0f6ae&utm_source=9626665718662657185996571859&utm_medium=RSS" target="_blank">MoneyDJ — 亞馬遜市值突首破3兆美元 AI、雲端成長動能強勁</a> ｜ <a href="https://ec.ltn.com.tw/article/breakingnews/5528293" target="_blank">自由財經 — 企業AI進入爆發期！微軟Copilot付費席次突破3000萬</a></div>
+</article>
+<article class="card card-major" style="--section-color:#66BB6A">
+  <h3>全球記憶體荒的傳導鏈全面攤開 — Xbox漲價170英鎊、MacBook Air缺貨、伺服器出貨受限，南亞科7月營收年增719.6%</h3>
+  <p class="label">發生什麼事</p><p class="body">記憶體短缺已經從供應鏈議題升級為終端消費者事件，而且證據鏈完整。第一層是終端漲價：微軟因記憶體晶片成本上升，將Xbox Series X在英國售價調高170英鎊，其中一款機型漲幅達43%；TechCrunch報導全球記憶體短缺已波及蘋果最暢銷的MacBook Air的供貨；MoneyDJ則指出台積電漲價加上GDDR7變貴，南韓RTX 50系列顯卡8月喊漲。第二層是系統出貨受限：DIGITIMES最新調查指出，2026年第二季受記憶體、CPU及IC載板等關鍵零組件供應吃緊影響，全球伺服器出貨量僅較前季微幅成長3.8%；預估第三季出貨量將首度突破500萬台，但季增率僅2.8%，增速明顯放緩。第三層是上游廠商的爆發性獲利：台灣DRAM廠南亞科（2408）7月自結合併營收衝上438.68億元，月增49.26%、年增719.61%，再創歷史新高。第四層是技術路線的回應：SK海力士與SanDisk 4日聯手發布高頻寬快閃記憶體（HBF）首項標準規範，定位介於HBM與SSD之間，試圖用NAND的大容量突破AI記憶體瓶頸。同時，驅動IC廠瑞鼎已明言「記憶體漲價影響消費需求」，第三季營運動能較上季趨緩。</p><div class="interpretation">📐 解讀：這是一條教科書級的完整傳導鏈，而且已經走到了「需求破壞」的臨界點。前三層（上游漲價→系統受限→終端漲價）都已實現，第四層的訊號才是關鍵：瑞鼎明說記憶體漲價正在影響消費需求。也就是說，記憶體的漲價已經開始吃掉自己的需求基礎。我的判斷是，記憶體行情的性質正在改變——前半段是AI伺服器需求拉動的良性漲價，現在進入排擠效應階段：AI伺服器搶走的產能與價格上漲，正在把消費性電子的需求壓下去。對台股記憶體族群的意義是，營收年增719%這種數字是真的，但它的持續性取決於AI伺服器需求能否持續吸收全部產能，而DIGITIMES的第三季季增率從3.8%降到2.8%正是第一個減速訊號。</div><div class="transmission">🔗 AI伺服器HBM需求排擠標準型DRAM產能 → DRAM現貨價飆漲 → 南亞科7月營收年增719.6%、力積電與記憶體族群股價強勢 → 但同時伺服器整機因記憶體/CPU/載板缺料，Q2出貨僅季增3.8%、Q3預估季增2.8%（減速） → 成本轉嫁至消費終端：Xbox Series X漲170英鎊（最高43%）、MacBook Air缺貨、RTX 50顯卡喊漲 → 消費性需求萎縮（瑞鼎：記憶體漲價影響消費需求，Q3動能趨緩） → 記憶體漲價開始侵蝕自身的非AI需求基礎</div><div class="structural-tag">🏗️ 結構性 — 雙軌並行。AI伺服器帶動的HBM需求是結構性的（判斷依據：超大型雲端商已進行多年期預訂），但標準型DRAM的價格飆漲有明顯的週期成分——它來自產能配置的排擠效應，一旦新產能開出或AI需求放緩，價格會回落得比漲上去更快。這個區分對操作極為重要：不要把週期性漲價的估值當成結構性成長來給。</div><div class="contradiction">⚡ 矛盾訊號：市場最大的矛盾訊號在這裡：一邊是南亞科營收年增719.6%、台股記憶體族群強勢表態，市場解讀為「超級循環」；另一邊是瑞鼎明確表示記憶體漲價正在影響消費需求、第三季動能趨緩，以及DIGITIMES的伺服器出貨季增率從3.8%降至2.8%。前者是價格訊號，後者是數量訊號。歷史上記憶體週期的頂點，往往就出現在「價格還在漲、但出貨量已經開始減速」的這個交叉點上。另一個矛盾：環球晶董事長徐秀蘭表示6吋、8吋及12吋產能皆接近滿載、長約拉長且非長約價格續看漲——上游矽晶圓的樂觀與下游驅動IC的保守，形成明顯落差。</div><div class="scenarios">🔀 如果AI伺服器需求在第四季重新加速（季增率回到4%以上），且新增DRAM產能開出時程遞延至2027年，記憶體價格可望再撐兩到三個季度，南亞科、力積電等族群的獲利高峰會落在2026年第四季至2027年第一季；如果第三季伺服器出貨季增率實際低於2.8%的預估、同時消費性電子（NB、手機、遊戲機）出貨年減擴大至5%以上，記憶體現貨價可能在2026年第四季見頂回落，屆時股價的修正幅度會遠大於獲利的下修幅度，因為目前的評價已經內含了「循環不會結束」的假設。</div><div class="outlook"><p class="outlook-title">🔭 展望</p><p><strong>短期（1個月內）：</strong>短期（1個月內）：DRAM現貨價續漲的機率仍高，南亞科8月營收有望再創高。但要密切注意消費性電子廠商的第三季展望是否集體轉保守——瑞鼎已經先發出訊號。</p><p><strong>中期（3-6個月）：</strong>中期（3–6個月）：關鍵變數有二：一是第三季全球伺服器出貨是否真的突破500萬台（DIGITIMES預估），二是HBF等新技術標準能否在2027年實質分流AI記憶體需求。若HBF順利推進，將部分緩解HBM對DRAM產能的排擠。</p><p><strong>長期（1年以上）：</strong>長期（1年以上）：記憶體產業的結構已經從「三強寡占的標準品循環」轉向「AI專用HBM＋標準型DRAM」的雙軌市場，兩者的獲利週期不再同步。這對台廠的意義是，純標準型DRAM業者（如南亞科）的獲利波動度會高於同時具備HBM能力的三星、SK海力士與美光，估值上應給予折價而非溢價。</p></div><div class="watch-list">📡 持續追蹤：<ul><li>DRAM現貨價與合約價的月度走勢</li><li>第三季全球伺服器出貨是否達500萬台</li><li>南亞科、華邦電月營收年增率的變化斜率</li><li>消費性電子廠商Q3法說會的展望語氣（瑞鼎已轉保守）</li><li>HBF標準的採用進度與量產時程</li></ul></div>
+  <div class="interview-angle">💡 面試角度：這是台灣MA面試最可能被問到的產業題，五個職位都會問，但切角不同。國泰CIM會問投資組合層面：記憶體股該加碼還是減碼？你要能講出「價格訊號與數量訊號背離」這個判斷。中信MA投資專案角度：如果評估一個記憶體相關的投資案，你怎麼區分結構性成長與週期性漲價？富邦證投銀組角度：南亞科這種營收年增719%的公司如果要辦現金增資或發GDR，什麼時點最好？（答案是在數量訊號轉弱之前）。元大投行法金角度：這些公司的營運資金需求暴增，銀行授信該怎麼看？開發資本則可以從上游材料與設備投資機會切入。</div>
+  <div class="interview-verbal">💬 口說版：「南亞科7月營收438.68億、年增719.6%，市場解讀成記憶體超級循環，但我會提醒一個背離：同一天DIGITIMES說第三季全球伺服器出貨季增率從3.8%降到2.8%，驅動IC廠瑞鼎也明講記憶體漲價已經在影響消費需求。價格還在漲，但數量已經在減速——歷史上記憶體週期的頂點常常就出現在這個交叉點。以國泰CIM的投資組合角度，我現在不會追高純標準型DRAM，反而會關注同時有HBM能力的廠商，因為AI專用HBM跟標準型DRAM已經是兩個獲利週期不同步的市場，純標準型的波動度更高，估值上應該給折價不是溢價。」</div>
+  <div class="sources"><a href="https://www.bbc.co.uk/news/articles/czjlvrd9e43o?at_medium=RSS&at_campaign=rss" target="_blank">BBC Business — Xbox Series X price hiked by £170 due to rising memory chip costs</a> ｜ <a href="https://techcrunch.com/2026/08/02/the-global-memory-shortage-hits-the-macbook-air/" target="_blank">TechCrunch — The global memory shortage hits the MacBook Air</a> ｜ <a href="https://www.cnbc.com/2026/07/31/tech-earnings-cash-memory-ai.html" target="_blank">CNBC Technology — Dwindling cash and soaring memory costs: Tech's AI buildout has ballooning price tag</a></div>
+  <div class="tw-sources"><span class="tw-label">🇹🇼 台灣報導：</span><a href="https://ec.ltn.com.tw/article/breakingnews/5528293" target="_blank">自由財經 — 南亞科7月營收暴衝至438.68億元 月增近五成、再飆新高</a> ｜ <a href="https://money.udn.com/money/story/5612/9670434" target="_blank">經濟日報 — 供料限制箝制出貨力道 Q3全球伺服器將季增2.8％</a> ｜ <a href="https://www.ctee.com.tw/news/20260804701723-430704" target="_blank">工商時報 — 強強聯手！SK海力士攜SanDisk發布HBF首項標準 搶攻AI儲存商機</a> ｜ <a href="https://www.cna.com.tw/news/afe/202608040204.aspx" target="_blank">中央社 — 研調估第3季全球伺服器出貨季增2.8% 增速放緩</a> ｜ <a href="https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=a8e0ed75-3af7-4116-9ad8-9dbf8081235a&utm_source=9626665718662657185996571859&utm_medium=RSS" target="_blank">MoneyDJ — 台積電漲價+GDDR7變貴 南韓RTX 50顯卡8月喊漲</a> ｜ <a href="https://ec.ltn.com.tw/article/breakingnews/5528528" target="_blank">自由財經 — 環球晶各尺寸產能滿載 長約拉長、非長約價格續看漲</a></div>
+</article>
+<article class="card card-major" style="--section-color:#66BB6A">
+  <h3>🔄 Palantir第二季美國商用營收年增近150%，股價跳漲16%（持續追蹤）</h3>
+  <p class="label">發生什麼事</p><p class="body">Palantir第二季財報大幅超越市場預期，美國商用業務營收年增近150%，整體美國銷售成長23%，單季獲利達10億美元，公司同時調升全年營收展望。財報後股價跳漲16%，並獲得分析師升評。執行長Alex Karp在法說會上再度公開抨擊前沿AI實驗室，稱它們「試圖讓我們上癮」、「把各地的智慧財產價值都蒸餾走了」，並表示「我們的客戶拒絕成為語言模型實驗室的附庸國」，TechCrunch報導他甚至以「馬克思主義」形容AI產業。不過Al Jazeera同步指出，Palantir與以色列的關係及其在軍事科技的角色仍具爭議。</p><p class="label">關鍵數據</p><p class="body">美國商用營收年增近150%；美國整體銷售成長23%；單季獲利10億美元；股價單日漲16%</p><div class="interpretation">📐 解讀：Palantir的數字證明了一件重要的事：AI變現確實在發生，但發生在應用層與部署層，不在模型層。Karp的攻擊性言論不只是個性表演，而是精準的商業定位——他在告訴企業客戶「模型會商品化，部署與資料治理才是護城河」。這與DeepSeek成本低百倍、阿里Qwen3.8-Max追上、Hugging Face執行長說中國在開源模型領先，構成同一個論點的三個佐證：模型本身正在快速商品化。真正的投資含義是，AI價值鏈的獲利池正在從模型訓練往兩端移動——上游的算力硬體與下游的應用部署。</div><div class="transmission">🔗 開源模型（DeepSeek、Qwen3.8-Max）快速追趕 → 模型層快速商品化、API定價持續下探（OpenAI已調降GPT-5.6價格，Luna降幅達80%） → 價值往部署層與資料治理層移轉 → Palantir美國商用營收年增150%、單季獲利10億美元 → 企業客戶願意為「不依賴單一模型供應商」的架構付溢價 → 對台廠的含義：AI伺服器與邊緣運算（凌華已布局Edge AI）的需求會比模型層更持久</div><div class="scenarios">🔀 如果企業AI部署持續加速（微軟Copilot付費席次已破3,000萬席、單季淨增倍增可為佐證），Palantir的商用動能有機會延續四到六個季度；如果開源模型的能力與工具鏈成熟到企業可以自建部署，Palantir的溢價空間會被壓縮，屆時150%的成長率會快速收斂至50%以下。</div><div class="outlook"><p class="outlook-title">🔭 展望</p><p><strong>短期（1個月內）：</strong>短期（1個月內）：股價在16%跳漲後評價已高，短線波動加大。關注美國政府部門訂單的續約情況，這是Palantir營收品質的核心。</p><p><strong>中期（3-6個月）：</strong>中期（3–6個月）：白宮8月4日召集Meta、Anthropic、OpenAI、Google四大科技巨頭閉門討論AI資安測試框架，加上歐盟AI法案賦予執委會檢查模型、限制市場准入並處以最高1,500萬歐元或營業額3%罰款的權力——監管趨嚴對Palantir這類已深耕政府合規業務的公司反而是相對利多。</p></div>
+  
+  <div class="interview-verbal">💬 口說版：「Palantir美國商用營收年增近150%、單季賺10億美元，我認為它證明的是「AI變現發生在部署層，不在模型層」。同期的三個訊號可以互相印證：DeepSeek新模型成本比Claude低百倍、阿里Qwen3.8-Max追上、OpenAI把GPT-5.6 Luna降價80%——模型正在快速商品化。所以Karp罵前沿實驗室其實是精準的商業定位，他在告訴客戶：模型會變成大宗商品，部署跟資料治理才是護城河。以元大投行法金服務科技業客戶的角度，這代表未來評估AI相關企業的信用與價值時，要看的是客戶黏著度跟部署複雜度，而不是模型參數量。」</div>
+  <div class="sources"><a href="https://www.cnbc.com/2026/08/03/palantir-pltr-earnings-q2-2026.html" target="_blank">CNBC Technology — Palantir soars on blowout quarter, with U.S. commercial revenue soaring nearly 150%</a> ｜ <a href="https://www.ft.com/content/3240e7c4-ba29-4ff3-83e5-cf2b3a5ff0ca?syn-25a6b1a6=1" target="_blank">FT Companies — Palantir forecasts greater demand from US groups for its AI software</a> ｜ <a href="https://www.aljazeera.com/economy/2026/8/4/us-stocks-near-record-high-oil-falls-as-trump-claims-iran-talks-underway?traffic_source=rss" target="_blank">Al Jazeera — Tech giant Palantir posts 'otherworldly' growth despite criticism over Gaza</a> ｜ <a href="https://www.cnbc.com/2026/08/03/eu-ai-act-enforcement-powers.html" target="_blank">CNBC Technology — Anthropic, OpenAI among firms facing new scrutiny under EU AI Act enforcement powers</a></div>
+  <div class="tw-sources"><span class="tw-label">🇹🇼 台灣報導：</span><a href="https://www.cna.com.tw/news/ait/202608040013.aspx" target="_blank">中央社 — AI失控風波 白宮召4大科技巨頭談資安測試</a> ｜ <a href="https://www.cna.com.tw/news/ait/202607310016.aspx" target="_blank">中央社 — AI模型競爭激烈 OpenAI調降GPT-5.6價格</a></div>
+</article>
+<article class="card card-brief">
+  <p>📎 <strong>AI主題對沖基金連環受創 — 450億美元的Situational Awareness數日內崩跌，Coatue旗下基金7月跌8.3%：</strong>前OpenAI研究員Leopold Aschenbrenner管理的450億美元AI主題對沖基金Situational Awareness，因歷史性的動能反轉觸發追繳保證金而被迫大砍公開股票部位，數日內淨值劇烈下滑；同期Coatue Management旗下對沖基金7月下跌8.3%，創一年多來最大月度跌幅，920億美元規模的Millennium Management也因AI股拋售下跌2.1%。</p>
+  <div class="sources"><a href="https://www.cnbc.com/2026/07/31/why-leopold-aschenbrenner-situational-awareness-hedge-fund-imploded.html" target="_blank">CNBC — Why Situational Awareness hedge fund imploded, even in a tame stock market</a> ｜ <a href="https://www.cnbc.com/2026/07/31/leopold-aschenbrenner-situational-awareness-fund-fire-sale.html" target="_blank">CNBC Technology — How Leopold Aschenbrenner built a $45 billion AI hedge fund — and lost most of it in days</a></div>
+  <div class="tw-sources"><span class="tw-label">🇹🇼 台灣報導：</span><a href="https://money.udn.com/money/story/5599/9668981" target="_blank">經濟日報 — Coatue旗下避險基金跌逾8% 創一年多來最大月度跌幅</a> ｜ <a href="https://money.udn.com/money/story/5599/9669465" target="_blank">經濟日報 — AI交易震盪衝擊投資組合 多策略避險基金Millennium Management虧損2%</a></div>
+</article>
+
+</section>
+<section class="section">
+  <div class="section-header">
+    <span class="section-dot" style="background:#FFA726;color:#FFA726"></span>
+    <h2>⚡ 能源 / 基建</h2>
+  </div>
+  <article class="card card-major" style="--section-color:#FFA726">
+  <h3>荷莫茲海峽「自由航行」協議最快週三達成 — 但代價是承認伊朗對海峽的實質掌控，油價與戰爭溢價同步鬆動</h3>
+  <p class="label">發生什麼事</p><p class="body">美國財政部長貝森特4日表示，最快週二或週三就可能達成重新開放荷莫茲海峽、確保「自由航行」的協議。紐約時報同步報導，伊朗與阿曼正接近達成一項重新開放海峽海運交通的協議，但生效代價恐怕很高——等同於承認德黑蘭對這條全球最重要能源航道的掌控地位。伊朗外交部已與沙烏地、阿曼就荷莫茲海峽進行多輪通話，川普稱這是「良好的談話」，同時警告最新一輪談判是伊朗結束這場已持續五個月戰爭的「最後機會」，但伊朗方面否認談判正在進行，川普則在Truth Social上指控伊朗領導人說謊。油價對此的反應是回落：Al Jazeera報導S&P 500逼近歷史高點、油價下跌，道瓊創收盤紀錄。但風險並未解除——BBC引述分析師指出，中東油輪面臨的威脅是戰爭爆發以來最嚴重的，替代航線也遭攻擊；自3月1日以來已有超過60艘商船在波斯灣、荷莫茲海峽與阿曼灣遭攻擊。此外路透報導，美國陸軍在這場戰爭中已用掉「幾乎全部」的遠程精準飛彈庫存。</p><div class="interpretation">📐 解讀：市場正在把「停火」與「風險解除」畫等號，我認為這是誤判。協議的實質內容是用承認伊朗對海峽的控制權，換取航運恢復——這等於把一個軍事風險轉換成一個結構性的地緣政治租金。伊朗未來隨時可以用「通行費」或「選擇性放行」的方式重新施壓，而且成本比封鎖低得多（FT的Alphaville已在調侃「伊朗油輪通行費：其實完全合法？」）。美軍遠程精準飛彈庫存耗盡這件事更關鍵，它大幅降低了美國未來的軍事選項可信度，這是談判桌上真正的力量對比變化。所以我判斷：油價的地緣政治溢價會下降，但不會消失，且下方支撐比市場預期的高。</div><div class="transmission">🔗 美軍遠程精準飛彈庫存耗盡 → 美國軍事選項的可信度下降 → 談判籌碼弱化，被迫接受承認伊朗對荷莫茲掌控的協議 → 航運恢復、戰爭溢價收斂、油價回落 → 但伊朗取得結構性的航道租金與再施壓能力 → 未來油價的波動來源從「戰爭爆發風險」轉為「通行條件重新談判風險」 → 對能源進口國（含台灣）而言，長約避險的重要性上升、現貨曝險應下降</div><div class="structural-tag">🏗️ 結構性 — 結構性。判斷依據：如果協議真的以承認伊朗對海峽的掌控為代價，這改變的是全球能源運輸的權力結構，而不只是這一輪戰爭的結束；這個安排會持續影響未來十年的油價風險溢價定價方式。</div><div class="contradiction">⚡ 矛盾訊號：訊號嚴重衝突。川普堅稱談判正在進行、卡達確認外交努力，但伊朗公開否認並被川普指為「口是心非」；貝森特說協議最快週三達成，但BBC引述分析師說油輪面臨的威脅是開戰以來最嚴重的。市場選擇相信樂觀版本（S&P 500逼近歷史高點、油價回落），但《大賣空》原型人物Michael Burry近日在Substack警告，美股正面臨被忽視的真正致命風險。當價格已經反映了最好的情境，任何一則否認的消息都會造成不對稱的下跌。</div><div class="scenarios">🔀 如果協議在本週內正式簽署且首批油輪順利通行，布蘭特油價可能在一個月內回落至每桶80美元以下，全球通膨預期同步下修，Fed的三張升息票會被邊緣化，這對台股與新台幣都是正面訊號；如果談判在最後一刻破局、或協議簽署後仍發生油輪攻擊事件（過去五個月已有60艘商船遇襲），布蘭特有機會重新站上每桶90美元，屆時美國7月已經「比疫情時代更糟」的通膨預期會進一步惡化，Fed 9月升息一碼將成為主流預期。</div><div class="outlook"><p class="outlook-title">🔭 展望</p><p><strong>短期（1個月內）：</strong>短期（1個月內）：布蘭特油價預期在80–92美元區間劇烈震盪，方向完全取決於協議是否落地。建議把注意力放在實際的油輪通行數據而非官方聲明，因為雙方說法互相矛盾。</p><p><strong>中期（3-6個月）：</strong>中期（3–6個月）：即使協議達成，能源航運的保險費率不會立刻回到戰前水準。歐洲同時面臨乾旱衝擊能源供應（羅馬尼亞為確保唯一運轉中的核反應爐冷卻水源，不得不爆破多瑙河河床岩石引水），供給端的脆弱性是多重來源的。</p><p><strong>長期（1年以上）：</strong>長期（1年以上）：這場戰爭已經永久改變了能源安全的成本結構。海灣國家（Al Jazeera分析指出，波灣正悄悄結束五十年的對外依賴，轉向自建安全架構）將加速投資自主軍事能力與替代輸送路線，這對基礎建設投資是一個為期十年的主題。</p></div><div class="watch-list">📡 持續追蹤：<ul><li>荷莫茲海峽每日油輪通行艘數（實際數據，非官方聲明）</li><li>布蘭特原油80與90美元兩道關卡</li><li>中東航線戰爭險保險費率</li><li>美國戰略石油儲備（授權容量7.14億桶）的補庫進度</li><li>伊朗、阿曼協議的正式文本內容</li></ul></div>
+  <div class="interview-angle">💡 面試角度：開發資本基礎建設投資是這題的主場：海灣國家轉向自建安全架構，代表未來十年港口、替代輸油管線、能源儲備設施的投資機會，面試可能問「這類基建案的政治風險怎麼定價？」國泰CIM角度：油價回落對通膨預期與債券部位的含義。中信MA投資專案角度：如果評估一個中東相關的投資案，這種「風險轉換而非消除」的情境要怎麼反映在折現率或情境分析裡。富邦證投銀組可以談：油價波動對台灣塑化、航運類股籌資時點的影響（華夏第二季獲利就因美伊衝突催化塑化行情而翻倍）。</div>
+  <div class="interview-verbal">💬 口說版：「貝森特說荷莫茲海峽協議最快週三達成，市場把停火跟風險解除畫上等號，我認為這是誤判。因為紐時報導的協議實質內容是「承認伊朗對海峽的掌控」來換取航運恢復——這不是消除風險，是把軍事風險轉換成結構性的地緣政治租金，伊朗未來可以用通行費或選擇性放行重新施壓，成本比封鎖低得多。而且路透說美軍遠程精準飛彈庫存已經用掉「幾乎全部」，這大幅降低了美國軍事選項的可信度。以開發資本評估中東基建案的角度，我不會把停火當成風險解除的訊號，反而會把「通行條件重新談判」當成一個常態化的情境變數放進模型裡。」</div>
+  <div class="sources"><a href="https://www.cnbc.com/2026/08/04/bessent-says-there-may-be-deal-tuesday-or-wednesday-to-open-strait-of-hormuz-with-freedom-of-movement.html" target="_blank">CNBC — Bessent says there may be deal Tuesday or Wednesday to open Strait of Hormuz with 'freedom of movement'</a> ｜ <a href="https://www.aljazeera.com/economy/2026/8/4/us-stocks-near-record-high-oil-falls-as-trump-claims-iran-talks-underway?traffic_source=rss" target="_blank">Al Jazeera — US stocks near record high, oil falls as Trump claims Iran talks under way</a> ｜ <a href="https://www.bbc.co.uk/news/articles/czjlvrd9e43o?at_medium=RSS&at_campaign=rss" target="_blank">BBC Business — Threat to oil tankers in Middle East worst since start of Iran war, analysts say</a> ｜ <a href="https://www.cnbc.com/2026/07/30/shell-2q-earnings-iran-war-oil.html" target="_blank">CNBC Energy — Oil shipments are under attack on multiple fronts as fighting escalates in Red Sea, Hormuz and Black Sea</a></div>
+  <div class="tw-sources"><span class="tw-label">🇹🇼 台灣報導：</span><a href="https://money.udn.com/money/story/5599/9670689" target="_blank">經濟日報 — 紐時：伊朗、阿曼新協議成形 鞏固德黑蘭掌控荷莫茲</a> ｜ <a href="https://www.ctee.com.tw/news/20260804701455-430701" target="_blank">工商時報 — 美股恐爆血腥屠殺！《大賣空》貝瑞警告：真正致命風險被忽視</a></div>
+</article>
+<article class="card card-major" style="--section-color:#FFA726">
+  <h3>🔄 石油巨頭戰爭紅利全面入袋 — BP獲利翻倍至57億美元、沙烏地阿美增33%，川普痛批「賺太多錢」（持續追蹤）</h3>
+  <p class="label">發生什麼事</p><p class="body">8月4日是能源業的財報日，數字全面爆發：英國石油（BP）第二季獲利翻倍以上至57億美元，創2022年以來最高；沙烏地阿美第二季獲利年增33%。此前殼牌已公布四年來最佳單季獲利，雪佛龍創下史上最高單季獲利，埃克森美孚獲利較去年同期翻倍。美國WTI原油價格自2月28日美國與以色列攻擊伊朗以來上漲約20%。川普對此公開發難，痛批埃克森與雪佛龍在伊朗衝突期間「賺太多錢」、「我不喜歡這樣」，要求業者主動降價。與此同時，BP宣布兩項重大資產處分：將出售40億美元的美國生質天然氣（biogas）業務，並把北海業務掛牌求售，將結束該公司在北海長達60年的生產歷史；執行長透露北海資產已收到數個買家接洽。英國方面，無鉛汽油價格已升至每公升160便士，創戰爭爆發以來新高，加油站燃油失竊金額每日近20萬英鎊，五個月內案件增加兩成。</p><p class="label">關鍵數據</p><p class="body">BP第二季獲利57億美元（翻倍以上，2022年來最高）；沙烏地阿美獲利年增33%；WTI自2/28開戰以來漲約20%；BP出售40億美元美國生質天然氣業務；英國無鉛汽油160便士/公升</p><div class="interpretation">📐 解讀：BP的動作比獲利數字更值得注意。在獲利創四年新高的同時決定退出北海（60年歷史）並出售40億美元的生質天然氣業務，這是典型的「趁高點賣資產、集中資本於核心」策略。我判斷這反映一個判斷：BP管理層認為當前的高油價是週期性的，所以要趁現在把估值最高的時候變現非核心資產。這對投資人是重要訊號——最了解油價的人正在賣資產，而不是加碼投資。至於川普施壓降價，這在政治上可以理解，但在經濟上是無效的：油價由全球市場決定，美國業者單方面降價只會犧牲股東利益而不影響全球價格，除非配合戰略儲備釋出或供給端政策。</div><div class="transmission">🔗 美伊戰爭推升WTI約20% → 石油巨頭獲利創紀錄（BP+100%、Aramco+33%、Chevron史上最高） → 政治壓力升高（川普喊話降價、環保團體指控暴利） → 業者選擇趁高點處分非核心資產（BP退出北海60年業務、賣40億美元生質天然氣） → 上游投資不增反減 → 若協議達成油價回落，產能投資不足的問題會在下一輪需求回升時放大 → 中長期油價波動度上升</div><div class="scenarios">🔀 如果荷莫茲協議落地、布蘭特跌破每桶80美元，石油巨頭的第三季獲利將較第二季大幅下滑，屆時川普的降價壓力自然消失，但能源股的評價會回到週期底部區間；如果協議破局且油價站上90美元以上，政治壓力會升級為實質政策風險——暴利稅（windfall tax）的討論在英國與歐盟已有前例，這才是能源股真正的尾部風險。</div><div class="outlook"><p class="outlook-title">🔭 展望</p><p><strong>短期（1個月內）：</strong>短期（1個月內）：若荷莫茲協議達成，能源股將面臨獲利高峰已過的評價壓縮，但股利與買回庫藏股的支撐仍在。關注BP北海資產的買家身分——若由私募或專業油氣基金接手，代表市場仍看好長期價值。</p><p><strong>中期（3-6個月）：</strong>中期（3–6個月）：能源業的資本配置方向是關鍵。CNBC已指出，比起石油巨頭，部分再生能源與AI相關的中小型股可能是更好的標的——因為AI資料中心的電力需求是結構性成長，而油價是週期性。</p></div>
+  
+  <div class="interview-verbal">💬 口說版：「BP第二季獲利翻倍到57億美元創2022年來最高，但同一天宣布退出經營60年的北海業務、還要賣掉40億美元的美國生質天然氣事業——我認為這個動作比獲利數字更值得注意。最了解油價的人選擇在高點賣資產而不是加碼投資，這等於管理層自己判斷當前高油價是週期性的。以開發資本評估能源基建投資的角度，我會把這當成一個重要的反向訊號：現在不是進場買上游油氣資產的時點，反而應該關注BP要賣的北海資產最後由誰接手、用什麼倍數成交，那個成交倍數才是市場對長期油價的真實共識。」</div>
+  <div class="sources"><a href="https://www.cnbc.com/2026/08/04/bp-2q-earnings-oil-iran-war.html" target="_blank">CNBC — BP profit more than doubles as Trump blasts Big Oil for 'making too much money'</a> ｜ <a href="https://www.cnbc.com/2026/08/04/saudi-aramco-earnings-2q-oil-iran-war.html" target="_blank">CNBC — Saudi Aramco profits jump 33% in second quarter as Iran war squeezes oil supply</a> ｜ <a href="https://www.ft.com/content/fa298199-b824-4ca9-a3a0-440eb320ac61?syn-25a6b1a6=1" target="_blank">FT — BP to sell $4bn US biogas business as profits more than double</a> ｜ <a href="https://www.bbc.co.uk/news/articles/czjlvrd9e43o?at_medium=RSS&at_campaign=rss" target="_blank">BBC Business — BP puts North Sea business up for sale</a> ｜ <a href="https://www.npr.org/2026/07/30/nx-s1-5913851/mortgage-rates-one-year-high-july-2026" target="_blank">NPR Business — Oil companies report sky-high profits thanks to wartime crude prices</a></div>
+  <div class="tw-sources"><span class="tw-label">🇹🇼 台灣報導：</span><a href="https://www.cna.com.tw/news/afe/202608040189.aspx" target="_blank">中央社 — 美伊戰爭推升油價 沙烏地阿美與英國BP第2季獲利飆</a> ｜ <a href="https://www.moneydj.com/kmdj/news/newsviewer.aspx?a=765afc04-af9b-4dd3-a3c4-5d7e5b9d9826&utm_source=9626665718662657185996571859&utm_medium=RSS" target="_blank">MoneyDJ — 川普批美國石油巨頭「賺太大了」：應主動降價</a></div>
+</article>
+<article class="card card-brief">
+  <p>📎 <strong>歐洲乾旱逼出極端措施 — 羅馬尼亞爆破多瑙河河床引水，保住唯一運轉中的核反應爐：</strong>羅馬尼亞3日爆破多瑙河一處河床岩石，以引導冷卻水源供應該國唯一運轉中的核反應爐；歐洲高溫與乾旱已導致多數河流水位下降，供水、運輸與電力生產同時吃緊，法國7月更創下1900年開始測氣溫以來最熱的單月紀錄，超越2003年8月與2006年7月的熱浪。</p>
+  <div class="sources"><a href="https://www.ctee.com.tw/news/20260804701587-430701" target="_blank">工商時報 — 歐洲乾旱衝擊能源供應 羅馬尼亞炸河引水確保核電運轉</a> ｜ <a href="https://www.cnbc.com/2026/08/04/cnbc-daily-open-japan-yen-intervention-oil-prices-amazon.html" target="_blank">CNBC World — Greece wildfire in pictures: Firefighters battle blaze worsened by 100km per hour winds</a></div>
+  <div class="tw-sources"><span class="tw-label">🇹🇼 台灣報導：</span><a href="https://money.udn.com/money/story/5599/9670527" target="_blank">經濟日報 — 熱浪接連來襲 法國7月創有紀錄以來最炎熱月份</a></div>
+</article>
+<article class="card card-brief">
+  <p>📎 <strong>電網與核能新創同日各募10億美元 — Base Power家用電池、Valar Atomics小型核能：</strong>家用電池新創Base Power再募得10億美元以擴大「後院電池」產能、緩解電網壓力；小型核能新創Valar Atomics則由紅杉資本Shaun Maguire領投10億美元、投後估值60億美元，此前該公司已於6月與輝達簽署開發協議——顯示AI資料中心的電力缺口正把私募資金大規模導向分散式電力與小型核能這兩條路徑。</p>
+  <div class="sources"><a href="https://techcrunch.com/2026/08/03/base-power-raises-another-1b-to-save-the-grid-using-backyard-batteries/" target="_blank">TechCrunch — Base Power raises another $1B to save the grid using backyard batteries</a> ｜ <a href="https://techcrunch.com/2026/08/03/sequoias-shaun-maguire-leads-1b-round-for-nuclear-startup-valar-atomics/" target="_blank">TechCrunch — Sequoia's Shaun Maguire leads $1B round for nuclear startup Valar Atomics</a></div>
+  <div class="tw-sources"><span class="tw-label">🇹🇼 台灣報導：</span><a href="https://money.udn.com/money/story/5612/9670600" target="_blank">經濟日報 — 熙特爾深化台日能源技術 下半年海外營收大增</a></div>
+</article>
+
+</section>
+<section class="section">
+  <div class="section-header">
+    <span class="section-dot" style="background:#EF5350;color:#EF5350"></span>
+    <h2>🇹🇼 台灣 / 亞太</h2>
+  </div>
+  <article class="card card-major" style="--section-color:#EF5350">
+  <h3>新新併最後一塊拼圖到位 — 金管會核准台新銀併新光銀，總資產4.7兆元、據點204家躍居國銀第二</h3>
+  <p class="label">發生什麼事</p><p class="body">金管會8月4日正式核准台新銀行與新光銀行的換股合併案，存續主體為台新銀行，暫定合併基準日為2027年1月1日。合併後總資產將達4.7兆元、成為國銀第七大；國內營業據點從台新銀101家加上新光銀103家、合計204家，躍升為國銀第二多、民營銀行第一多，僅次於合作金庫銀行。這是台新金與新光金合控整併的最後一塊拼圖——金控層級的合併先前已完成，銀行子公司的整併才是實質綜效的來源。金管會銀行局副局長王允中特別指出，由於銀行核心系統整合最為複雜，已要求雙方必須確保核心系統穩定切換及客戶交易不中斷。同一天，中國信託銀行也宣布首度進駐台南安平區，設立台南地區第13個據點，並且是該行在台南規模最大的分行，反映南科帶動的區域金融需求。</p><div class="interpretation">📐 解讀：204家據點、民營銀行第一多，這個數字本身就是雙面刃。在數位金融時代，實體據點是成本而非資產——真正的綜效必須來自「關閉重疊據點」而非「加總據點數」。台新銀與新光銀的分行地理重疊度高（雙方都以雙北為主戰場），我判斷合併後兩到三年內會有實質的據點裁併，這才是綜效兌現的關鍵，也是最容易引發勞資爭議的環節。至於金管會特別點名核心系統整合，這絕非例行提醒——台灣過去幾次銀行合併都在系統切換上出過狀況，而台新與新光的系統架構世代差異不小。真正的執行風險在2027年元旦前後那幾週。</div><div class="transmission">🔗 台新金與新光金完成金控層級合併 → 銀行子公司合併獲准（2027/1/1基準日） → 總資產躍至4.7兆、據點204家 → 但重疊據點（雙北為主）產生成本壓力 → 未來2–3年進行據點裁併與人力調整 → 綜效真正兌現、但伴隨勞資與客戶流失風險 → 台灣民營銀行市占重新排序，帶動同業（富邦、國泰、中信）的規模競賽壓力</div><div class="structural-tag">🏗️ 結構性 — 結構性。判斷依據：台灣銀行業長期過度競爭（over-banking），主管機關近年明確鼓勵整併；這起合併會重設民營銀行的規模排序，並提高其他銀行的整併動機，是產業結構的永久性變化。</div><div class="contradiction">⚡ 矛盾訊號：值得注意的矛盾：金管會一方面核准創造4.7兆元資產的大型合併，另一方面同日推出「四貸同堂」信用風險監控新制（10月起銀行需申報理財型房貸、信貸、股票質押融資與其他周轉金貸款四大類）與台股融資槓桿儀表板（9月底上線）。也就是說，主管機關同時在做兩件方向相反的事：鼓勵銀行做大（規模），同時收緊信用風險監控（風險）。這其實不矛盾，而是對「規模擴張伴隨風險累積」的預防性配套——但這也暗示主管機關對台灣家計部門的槓桿水準有實質疑慮。</div><div class="scenarios">🔀 如果2027年元旦的核心系統切換順利、且未來兩年內完成30–40家重疊據點的整併，台新銀的成本收入比（cost-income ratio）有機會改善3–5個百分點，這是市場尚未充分定價的部分；如果系統切換發生重大中斷或據點整併因勞資爭議延宕，綜效實現時程會遞延至2029年以後，屆時合併的財務效益將被整合成本吃掉大半，這在台灣過去的銀行合併案例中並非罕見。</div><div class="outlook"><p class="outlook-title">🔭 展望</p><p><strong>短期（1個月內）：</strong>短期（1個月內）：無實質營運變化，但市場會開始評估綜效。關注台新金是否公布具體的成本綜效目標與時程——沒有數字的綜效承諾通常不會兌現。</p><p><strong>中期（3-6個月）：</strong>中期（3–6個月）：2027年1月1日基準日前的系統整合測試是最大風險點。同時觀察是否有據點整併計畫外洩或工會表態，這會是綜效能否落地的領先指標。</p><p><strong>長期（1年以上）：</strong>長期（1年以上）：台灣民營銀行將形成「中信、國泰、富邦、台新新光」的四強格局，中小型銀行的併購價值上升。對求職者而言，這意味著大型民營銀行的MA職缺會更看重整併專案與系統轉型的能力。</p></div><div class="watch-list">📡 持續追蹤：<ul><li>台新金公布的成本綜效目標與達成時程</li><li>2027/1/1核心系統切換的實際執行狀況</li><li>合併後兩年內的據點淨減少家數</li><li>台新銀合併後的成本收入比變化</li><li>下一起台灣銀行整併案的傳聞標的</li></ul></div>
+  <div class="interview-angle">💡 面試角度：這題是所有五個職位的共同必考題，因為它是台灣金融業今年最大的結構性事件。中信MA投資專案角度最深：「這筆合併的綜效怎麼量化？」你要能講出成本綜效（據點與人力裁併）與收入綜效（交叉銷售）的區別，並指出前者可靠、後者常常落空。元大投行法金角度：如果你是財務顧問，會怎麼設計換股比例？富邦證投銀組角度：合併案中的少數股東權益與公平意見書（fairness opinion）怎麼處理？國泰CIM角度：合併後的銀行股該給多少評價溢價？開發資本則可以問：金融業整併與基礎建設整併的估值邏輯有什麼不同？</div>
+  <div class="interview-verbal">💬 口說版：「金管會核准台新銀併新光銀，合併後總資產4.7兆、據點204家成為民營銀行第一多，但我認為204家這個數字其實是雙面刃——在數位金融時代，實體據點是成本不是資產，真正的綜效必須來自關閉重疊據點，而台新跟新光的分行都集中在雙北，重疊度很高。所以我會盯兩個指標：一是台新金有沒有公布具體的成本綜效金額跟時程，沒有數字的綜效承諾通常不會兌現；二是2027年元旦的核心系統切換，金管會特別點名這件事不是例行提醒，台灣過去幾次銀行合併都在系統上出過狀況。以中信投資專案的角度，我評估併購綜效時會把成本綜效跟收入綜效分開看，前者可靠、後者常常落空。」</div>
+  <div class="sources"><a href="https://www.ft.com/content/0da95788-cde6-4e1a-af89-1faced91178e?syn-25a6b1a6=1" target="_blank">FT Companies — HSBC resumes share buybacks as quarterly profits soar to $10.1bn（國際同業對照）</a></div>
+  <div class="tw-sources"><span class="tw-label">🇹🇼 台灣報導：</span><a href="https://money.udn.com/money/story/5613/9670604" target="_blank">經濟日報 — 新新併最後拼圖到位！台新、新光銀明年元旦合併 金管會盯系統穩定</a> ｜ <a href="https://www.ctee.com.tw/news/20260804701820-430301" target="_blank">工商時報 — 金管會核准台新銀、新光銀合併 總資產將達4.7兆 國內據點國銀第二多</a> ｜ <a href="https://ec.ltn.com.tw/article/breakingnews/5528494" target="_blank">自由財經 — 金管會核准「台新新光銀行」合併 國內據點204家、全國第二</a> ｜ <a href="https://money.udn.com/money/story/5613/9670336" target="_blank">經濟日報 — 金管會同意台新與新光銀行在明年元旦二合一</a></div>
+</article>
+<article class="card card-major" style="--section-color:#EF5350">
+  <h3>金管會雙管齊下防槓桿風險 — 「四貸同堂」10月起強制申報，台股融資儀表板9月底上線</h3>
+  <p class="label">發生什麼事</p><p class="body">金管會8月4日同時推出兩項針對槓桿風險的新制。第一項是「四貸同堂」資訊揭露：針對同一借款人同時持有理財型房貸、信用貸款、股票質押融資與其他周轉金貸款所衍生的信用風險，銀行局將要求銀行新增申報「個人購買股票等」用途的理財周轉金，最快10月上路（申報9月資料）。銀行局副局長王允中指出，統計來源將包括理財型房貸、信貸、股票質押融資及其他周轉金貸款四大類。第二項是台股槓桿儀表板：近日台股波動加劇時，資訊平台CMoney停止提供「融資擔保維持率」數據，遭網友質疑「蓋牌」；證期局副局長黃仲豪回應「沒有蓋牌只有亮牌」，強調監理原則是「安全、透明、公平」，證交所將以儀表板方式提供融資餘額、整戶維持率、借券賣出占比及不限用途借貸等信用融資資訊，力拚9月底前上線。背景是台股當日震盪逾千點、終場小跌25.75點收在43,360.66點，成交量1.03兆元，外資賣超57.32億元且賣超前三大清一色為金融股（彰銀3.76萬張、臺企銀3.03萬張、台中銀2.92萬張），但投信同日買超252.7億元。新世代金融基金會董事長陳冲同日公開呼籲政府應由副院長層級主持，整合成立新的聯合徵信平台。</p><div class="interpretation">📐 解讀：把這兩項新制放在一起看，主管機關的真實憂慮就很清楚了：台灣家計部門正在用房子借錢買股票。「四貸同堂」這個詞本身就說明了問題——理財型房貸、信貸、股票質押、周轉金四種借款疊在同一個人身上，任何一個環節出事都會連鎖引爆，而現行徵信系統看不到全貌。我判斷這是台股在43,000點高檔、且經歷過千點震盪後，主管機關的預防性動作，時點選在此刻絕非巧合。至於「蓋牌」爭議，證期局的回應很有意思：與其禁止民間平台停供數據，不如自己做一個官方儀表板——這是正確的處理方式，因為資訊真空比壞消息更危險。陳冲呼籲成立副院長級的聯合徵信平台，等於認為現行的聯徵中心涵蓋不足，這個提議值得追蹤。</div><div class="transmission">🔗 台股自低點反彈至43,000點以上、散戶槓桿升高 → 理財型房貸、信貸、股票質押、周轉金「四貸同堂」現象普及 → 台股單日震盪逾千點時融資維持率快速惡化 → 民間平台停供維持率數據引發「蓋牌」疑慮、資訊真空放大恐慌 → 金管會雙管齊下：10月起強制申報四類借款、9月底推官方融資儀表板 → 槓桿透明度上升、極端行情下的踩踏風險降低 → 但短期內可能因資訊揭露而觸發部分投資人主動去槓桿</div><div class="structural-tag">🏗️ 結構性 — 結構性。判斷依據：這是徵信與監理基礎設施的永久性升級，不會因為股市回檔而取消；而且方向與國際金融監理趨勢一致（總體審慎監理，macroprudential）。</div><div class="contradiction">⚡ 矛盾訊號：矛盾訊號集中在資金流向：8月4日外資賣超57.32億元且前三大賣超全是金融股（彰銀、臺企銀、台中銀），但投信同日買超252.7億元，其中華南金已連13買。外資賣金融、投信買金融，兩邊對台灣銀行業的看法完全相反。我的解讀是：外資看的是升息預期落空與槓桿風險，投信看的是新新併帶動的整併行情與股利率。另一個值得注意的矛盾：外資在台指期的淨空單部位仍高達8.78萬口，但現貨買賣相對溫和——期貨產業專家分析這是因為期現貨價差波動大、有套利空間，並非單純看空。</div><div class="scenarios">🔀 如果9月底融資儀表板順利上線且數據顯示整戶維持率仍在健康水準（一般認為160%以上為安全），市場疑慮將消除，反而可能帶動一波資訊透明的信心行情；如果儀表板數據揭露出維持率已逼近追繳門檻的帳戶比例偏高，短期內可能觸發主動去槓桿賣壓，台股在43,000點的支撐將面臨實質考驗，屆時融資餘額的下降速度會是關鍵指標。</div><div class="outlook"><p class="outlook-title">🔭 展望</p><p><strong>短期（1個月內）：</strong>短期（1個月內）：台股上檔面臨季線約44,142點的反壓，下檔關注43,000點整數關卡。外資台指期淨空單8.78萬口的高避險部位是壓力來源，但也提供了軋空的燃料。</p><p><strong>中期（3-6個月）：</strong>中期（3–6個月）：9月底儀表板上線與10月四貸同堂申報上路，是兩個明確的政策時點。若揭露的數據健康，台灣金融股的風險溢價可望下修；反之則需重新評估銀行業的消金資產品質。</p><p><strong>長期（1年以上）：</strong>長期（1年以上）：台灣的總體審慎監理架構將更趨完整，這對銀行業是長期正面——資產品質可預測性提高、意外損失減少。但也意味著消金業務的成長空間受限，銀行必須從財富管理與企金尋找成長動能，這正是台新新光合併後必須回答的問題。</p></div><div class="watch-list">📡 持續追蹤：<ul><li>9月底台股融資儀表板上線後的整戶維持率數據</li><li>台股融資餘額週度變化</li><li>外資台指期淨空單8.78萬口的增減</li><li>10月起四貸同堂申報的首批統計結果</li><li>台股43,000點支撐與44,142點季線反壓</li></ul></div>
+  <div class="interview-angle">💡 面試角度：國泰CIM與元大投行法金都會問到這題的風險管理面向：「四貸同堂為什麼是問題？」答案要能講出「同一借款人的多重曝險在現行徵信系統下看不到全貌，違約時是連鎖而非獨立事件」。中信MA投資專案角度：如果你在評估一家銀行的消金資產品質，這個新制會讓你看到什麼過去看不到的資訊？富邦證投銀組角度：融資維持率透明化對券商業務的影響。這題還可以延伸到面試的加分點——主動提出陳冲呼籲成立副院長級聯合徵信平台這個政策建議，展現你有追蹤政策討論的深度。</div>
+  <div class="interview-verbal">💬 口說版：「金管會同一天推出「四貸同堂」申報跟台股融資儀表板，我認為這兩件事放在一起看，主管機關真正的憂慮很清楚：台灣家計部門正在用房子借錢買股票。理財型房貸、信貸、股票質押、周轉金四種借款疊在同一個人身上，任何一個環節出事都會連鎖引爆，但現行徵信系統看不到全貌。時點也不是巧合——台股在43,000點高檔、當天還震盪超過千點。以國泰CIM的風險管理角度，我覺得這個新制最有價值的地方是把「獨立違約事件」的假設修正為「連鎖違約」，這會直接影響銀行消金部位的預期損失估算，是過去用聯徵資料算不出來的。」</div>
+  <div class="sources"><a href="https://www.ft.com/content/7600731b-4f7f-4d38-a478-3196c565a880?syn-25a6b1a6=1" target="_blank">FT Markets — Whatever happened to prudence?（各國政府停止修正赤字，債市迄今容忍）</a></div>
+  <div class="tw-sources"><span class="tw-label">🇹🇼 台灣報導：</span><a href="https://money.udn.com/money/story/5613/9670593" target="_blank">經濟日報 — 四貸同堂藏信用風險 10月起銀行理財週轉金需申報</a> ｜ <a href="https://money.udn.com/money/story/5613/9670410" target="_blank">經濟日報 — 強化四貸同堂資訊揭露 銀行局和證期局推兩大新制</a> ｜ <a href="https://www.ctee.com.tw/news/20260804701744-430301" target="_blank">工商時報 — 融資擔保維持率被蓋牌 金管會喊：沒有蓋牌只有亮牌、擬推出「台股儀表板」</a> ｜ <a href="https://money.udn.com/money/story/5607/9670533" target="_blank">經濟日報 — 金管會喊沒有蓋牌！台股槓桿儀表板9月底上線</a> ｜ <a href="https://www.cna.com.tw/news/afe/202608040264.aspx" target="_blank">中央社 — 外資台指期淨空單8.78萬口 期貨專家：有套利空間</a></div>
+</article>
+<article class="card card-major" style="--section-color:#EF5350">
+  <h3>🔄 台廠AI供應鏈財報全面創高，但籌資與布局動作透露長期成本考量（持續追蹤）</h3>
+  <p class="label">發生什麼事</p><p class="body">8月4日是台股財報密集日，AI供應鏈成績單全面亮眼但各有玄機。緯創（3231）第二季合併營收8,954.42億元、季增5.81%、年增62.43%，歸屬母公司淨利148.27億元、季增53.96%、年增127.98%，EPS 4.72元，營收與獲利雙創歷史新高；董事長林憲銘表示AI產業未來幾年對台灣相當重要，總經理林建勳則指出客戶2027年上半年的需求預測已經出來、依舊強勁。但緯創同時公告了三件事：擴充台灣、美國及越南產能並注資、發行海外存託憑證（GDR）進行籌資、於校園設立AI算力中心。環球晶（6488）第二季合併營收152.1億元、季增8.8%但年減5.0%，EPS 7.9元，董事長徐秀蘭表示6吋、8吋及12吋產能皆接近滿載，長約拉長、非長約價格續看漲。另一方面，經濟部次長何晉滄在台日經貿論壇表示「台日合作正達到前所未有的高度」，並將從半導體、AI創新應用延伸至關鍵礦物供應鏈韌性。</p><p class="label">關鍵數據</p><p class="body">緯創Q2淨利148.27億元、年增127.98%、EPS 4.72元；環球晶Q2 EPS 7.9元、營收年減5.0%；緯創同步發行GDR並擴充台美越三地產能</p><div class="interpretation">📐 解讀：緯創的組合動作是這則新聞的重點：在獲利創歷史新高的同時發GDR籌資，而且是為了同時擴充台灣、美國、越南三地產能。這不是一般的產能擴張，而是把地緣政治風險內化成資本結構決策——三地布局意味著單位固定成本上升、規模經濟被稀釋，這是關稅與供應鏈韌性要求的代價。我判斷市場目前只看到「AI訂單旺到2027年」這條利多，還沒充分定價「三地布局的長期毛利率壓縮」。環球晶則呈現另一種訊號：產能滿載、價格看漲，但營收年減5.0%——這說明矽晶圓的量價結構正在改變，AI相關的高階需求撐住價格，但傳統應用的量能仍在收縮。</div><div class="transmission">🔗 AI伺服器需求旺至2027上半年 → 緯創Q2獲利年增128%創新高 → 但關稅司法不確定＋供應鏈韌性要求 → 被迫同時擴充台灣、美國、越南三地產能 → 資本支出暴增、發行GDR籌資（股權稀釋） → 三地布局稀釋規模經濟、單位固定成本上升 → 長期毛利率面臨結構性壓縮，除非能完全轉嫁給品牌客戶</div><div class="scenarios">🔀 如果2027年AI伺服器需求維持強勁且品牌客戶接受成本轉嫁，緯創的三地布局會轉為競爭優勢（客戶要求的供應鏈韌性只有少數廠商做得到），毛利率可望維持；如果AI資本支出在2027年放緩、同時美國廠的固定成本已經投入，營益率會出現明顯的營運槓桿反噬，屆時三地布局會從優勢變成包袱——這是評估台灣ODM廠時最需要壓力測試的情境。</div><div class="outlook"><p class="outlook-title">🔭 展望</p><p><strong>短期（1個月內）：</strong>短期（1個月內）：GDR發行的定價折扣與發行規模是關注焦點，折扣幅度反映法人對後市的看法。緯創8月營收在AI伺服器旺季下有望續強。</p><p><strong>中期（3-6個月）：</strong>中期（3–6個月）：關鍵在於三地產能的實際投產時程與良率爬升速度。美國廠的人力成本約為台灣的3–4倍，若無法完全轉嫁，2027年的毛利率會是最大變數。同時記憶體與載板缺料（DIGITIMES預估Q3伺服器出貨僅季增2.8%）會限制出貨彈性。</p></div>
+  
+  <div class="interview-verbal">💬 口說版：「緯創第二季淨利148億、年增128%創歷史新高，但同一天公告要發GDR籌資、同時擴充台灣美國越南三地產能——我認為這個組合動作比獲利數字更值得討論。獲利創新高還要發GDR稀釋股權，代表資本支出的規模超出營運現金流能負擔，而三地布局的本質是把地緣政治風險內化成資本結構決策，代價是規模經濟被稀釋、單位固定成本上升。以富邦證投銀組輔導企業籌資的角度，我覺得這個時點發GDR其實是對的——趁獲利創高、股價有支撐時把長期資本準備好，因為美國廠的人力成本是台灣的三到四倍，如果等到2027年AI需求放緩才要籌資，成本會高很多。」</div>
+  <div class="sources"><a href="https://www.ft.com/content/2906dfd6-ff5b-4f80-b575-661930ea9695?syn-25a6b1a6=1" target="_blank">FT Companies — India seeks to widen tax exemptions to woo investors such as Apple（亞洲各國爭取科技製造投資的對照）</a></div>
+  <div class="tw-sources"><span class="tw-label">🇹🇼 台灣報導：</span><a href="https://money.udn.com/money/story/5710/9670579" target="_blank">經濟日報 — 緯創財報／第2季獲利148億元、年增128% 成長速度遠超營收</a> ｜ <a href="https://money.udn.com/money/story/5710/9670579" target="_blank">經濟日報 — 緯創持續擴大投資規模 將發行GDR進行海外籌資</a> ｜ <a href="https://money.udn.com/money/story/5612/9670501" target="_blank">經濟日報 — 環球晶Q2每股純益7.9元 全球擴產進入收成期 日本廠表現最佳</a> ｜ <a href="https://ec.ltn.com.tw/article/breakingnews/5528528" target="_blank">自由財經 — 環球晶各尺寸產能滿載 長約拉長、非長約價格續看漲</a> ｜ <a href="https://ec.ltn.com.tw/article/breakingnews/5528383" target="_blank">自由財經 — 台日合作達新高度 經部：合作延伸至關鍵礦物供應鏈</a> ｜ <a href="https://www.cna.com.tw/news/afe/202608040194.aspx" target="_blank">中央社 — 經濟部：台日合作達新高度 將延伸至關鍵礦物</a></div>
+</article>
+<article class="card card-brief">
+  <p>📎 <strong>新台幣連二貶收32.447元，央行盤中強勢守住32.5元關卡：</strong>新台幣兌美元8月4日收在32.447元、貶0.9分，連續第二個交易日收黑；盤中因外資匯出一度貶至32.495元逼近32.5元關卡，央行進場調節後拉回，台北及元太外匯市場總成交金額量縮至24.7億美元；市場正審慎觀望美伊和談進展並等待本週美國就業數據。</p>
+  <div class="sources"><a href="https://www.cnbc.com/2026/08/03/yen-us-intervention-japan-market-currency.html" target="_blank">CNBC World — Treasury yields move higher as investors mull uncertainty around peace talks</a></div>
+  <div class="tw-sources"><span class="tw-label">🇹🇼 台灣報導：</span><a href="https://www.cna.com.tw/news/afe/202608040189.aspx" target="_blank">中央社 — 股匯同步整理 新台幣連2貶收32.447元</a> ｜ <a href="https://www.ctee.com.tw/news/20260804701626-430302" target="_blank">工商時報 — 新台幣午盤後再度重挫 央行穩住32.4元價位</a> ｜ <a href="https://ec.ltn.com.tw/article/breakingnews/5528437" target="_blank">自由財經 — 日圓暴漲曇花一現？新台幣連2黑、逼近32.5元</a> ｜ <a href="https://money.udn.com/money/story/5616/9670225" target="_blank">經濟日報 — 新台幣貶0.9分 收32.447元</a></div>
+</article>
+
+</section>
+
+
+    <footer>
+      <p>由 Claude 分析產出 · MA 面試準備用</p>
+      <p>RSS: CNBC · BBC · FT · WSJ · Al Jazeera · Yahoo Finance · TechCrunch · 經濟日報 · 工商時報 · 中央社 · 自由財經 · MoneyDJ</p>
+      <div class="keywords-footer"><span>#Fed</span><span>#油價</span><span>#台股</span><span>#AI</span><span>#TSMC</span><span>#Micron</span><span>#LNG</span><span>#荷莫茲</span><span>#SpaceX</span><span>#PE</span></div>
+      <p class="theme-badge">Theme: Light 清新白</p>
+    </footer>
+  </div>
+</body>
+</html>
