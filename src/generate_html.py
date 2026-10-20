@@ -100,6 +100,11 @@ THEMES = {
             "interview-rgb": "232, 113, 10",
         },
     },
+    # 極簡留白：獨立的 CSS + markup（見 MINIMAL_CSS / _generate_minimal_html）
+    "minimal": {
+        "label": "Minimal Gallery 極簡留白",
+        "vars": {},
+    },
 }
 
 AVAILABLE_THEMES = list(THEMES.keys())
@@ -697,6 +702,9 @@ def generate_html(analysis_json: dict, theme: str = "light") -> str:
     if theme not in THEMES:
         theme = "apple"
 
+    if theme == "minimal":
+        return _generate_minimal_html(analysis_json)
+
     theme_info = THEMES[theme]
     css_vars = _build_css_vars(theme)
 
@@ -869,6 +877,302 @@ def generate_html(analysis_json: dict, theme: str = "light") -> str:
 </body>
 </html>"""
     return html
+
+
+# ══════════════════════════════════════════
+#  Minimal Gallery theme
+# ══════════════════════════════════════════
+
+MINIMAL_FONTS = """<link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400&family=Noto+Serif+TC:wght@400;500&display=swap" rel="stylesheet">"""
+
+MINIMAL_CSS = """
+:root {
+    --bg: #FAFAF7;
+    --ink: #161616;
+    --text: #3B3B38;
+    --muted: #8E8E89;
+    --rule: #E4E3DE;
+    --serif: "Noto Serif TC", "Songti TC", "PMingLiU", serif;
+    --sans: "Noto Sans TC", -apple-system, BlinkMacSystemFont, "PingFang TC", "Microsoft JhengHei", system-ui, sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #121211;
+        --ink: #ECECE8;
+        --text: #C6C6C1;
+        --muted: #7C7C77;
+        --rule: #2A2A28;
+    }
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: var(--sans);
+    font-weight: 300;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.95;
+    letter-spacing: 0.02em;
+    -webkit-font-smoothing: antialiased;
+    animation: fade 0.9s ease both;
+}
+
+@keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+
+a { color: inherit; text-decoration: none; border-bottom: 1px solid var(--rule); transition: border-color 0.3s, color 0.3s; }
+a:hover { color: var(--ink); border-bottom-color: var(--ink); }
+
+.container { max-width: 640px; margin: 0 auto; padding: 160px 24px 120px; }
+
+.eyebrow {
+    font-size: 11px;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--muted);
+}
+
+/* ── Header ── */
+header { margin-bottom: 176px; }
+header .eyebrow { margin-bottom: 40px; }
+header h1 {
+    font-family: var(--serif);
+    font-size: 44px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: 0.1em;
+    line-height: 1.3;
+}
+.meta { margin-top: 32px; font-size: 13px; color: var(--muted); letter-spacing: 0.08em; }
+.meta span + span::before { content: "—"; margin: 0 14px; color: var(--rule); }
+
+/* ── Top 5 ── */
+.top5 { margin-bottom: 200px; }
+.top5 .eyebrow { margin-bottom: 48px; }
+.top5 ol { list-style: none; counter-reset: t; }
+.top5 li {
+    counter-increment: t;
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    padding: 30px 0;
+    border-top: 1px solid var(--rule);
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.85;
+}
+.top5 li:last-child { border-bottom: 1px solid var(--rule); }
+.top5 li::before {
+    content: counter(t, decimal-leading-zero);
+    font-family: var(--serif);
+    font-size: 14px;
+    color: var(--muted);
+    padding-top: 2px;
+}
+.top5 .sec { display: block; font-size: 11px; letter-spacing: 0.2em; color: var(--muted); margin-bottom: 6px; }
+
+/* ── Section ── */
+.section { margin-bottom: 200px; }
+.section-header { display: flex; align-items: baseline; gap: 20px; margin-bottom: 104px; }
+.section-num { font-family: var(--serif); font-size: 14px; color: var(--muted); }
+.section-header h2 {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: 0.12em;
+}
+
+/* ── Article ── */
+.article { padding-bottom: 96px; margin-bottom: 96px; border-bottom: 1px solid var(--rule); }
+.article:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.article h3 {
+    font-family: var(--serif);
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--ink);
+    line-height: 1.65;
+    letter-spacing: 0.04em;
+    margin-bottom: 8px;
+}
+.article .kind { font-size: 11px; letter-spacing: 0.2em; color: var(--muted); margin-bottom: 40px; }
+.article .label { font-size: 11px; letter-spacing: 0.28em; color: var(--muted); margin: 44px 0 12px; }
+.article .body { font-size: 16px; }
+
+.outlook-row { display: grid; grid-template-columns: 88px 1fr; gap: 16px; padding: 14px 0; border-top: 1px solid var(--rule); font-size: 15px; }
+.outlook-row:last-child { border-bottom: 1px solid var(--rule); }
+.outlook-row span { font-size: 12px; color: var(--muted); letter-spacing: 0.1em; padding-top: 3px; }
+
+.watch { font-size: 14px; color: var(--muted); }
+.watch span + span::before { content: "/"; margin: 0 12px; color: var(--rule); }
+
+.interview { margin-top: 56px; padding-left: 24px; border-left: 1px solid var(--ink); }
+.interview .label { margin-top: 0; }
+.interview .label ~ .label { margin-top: 32px; }
+.interview .verbal { font-family: var(--serif); font-size: 16px; color: var(--ink); line-height: 2; }
+
+.sources { margin-top: 48px; font-size: 12px; color: var(--muted); letter-spacing: 0.04em; line-height: 2.2; }
+.sources a + a { margin-left: 16px; }
+.sources .src-label { margin-right: 16px; letter-spacing: 0.2em; }
+
+/* ── Brief ── */
+.brief { padding-bottom: 48px; margin-bottom: 48px; }
+.brief h3 { font-size: 17px; margin-bottom: 12px; }
+.brief .body { font-size: 15px; }
+.brief .sources { margin-top: 20px; }
+
+/* ── Footer ── */
+footer { padding-top: 48px; border-top: 1px solid var(--rule); font-size: 12px; color: var(--muted); letter-spacing: 0.04em; line-height: 2.2; }
+
+@media (max-width: 600px) {
+    .container { padding: 96px 20px 80px; }
+    header { margin-bottom: 120px; }
+    header h1 { font-size: 34px; }
+    .top5, .section { margin-bottom: 140px; }
+    .top5 li { grid-template-columns: 40px 1fr; }
+    .section-header { margin-bottom: 72px; }
+    .article { padding-bottom: 72px; margin-bottom: 72px; }
+    .outlook-row { grid-template-columns: 1fr; gap: 2px; }
+}
+"""
+
+
+def _generate_minimal_html(analysis_json: dict) -> str:
+    """Minimal Gallery：無卡片、無 emoji，靠留白、細線與字級建立層次。"""
+    date = analysis_json.get("date", "")
+    day = analysis_json.get("day_of_week", "")
+    total = analysis_json.get("total_articles", 0)
+    src_count = analysis_json.get("source_count", 0)
+    top5 = analysis_json.get("top5", [])
+    sections = analysis_json.get("sections", {})
+
+    def links(items):
+        return "".join(f'<a href="{s["url"]}" target="_blank">{s["name"]}</a>' for s in items)
+
+    def sources_block(art):
+        parts = []
+        if art.get("sources"):
+            parts.append(f'<div><span class="src-label">來源</span>{links(art["sources"])}</div>')
+        if art.get("tw_sources"):
+            parts.append(f'<div><span class="src-label">台灣報導</span>{links(art["tw_sources"])}</div>')
+        return f'<div class="sources">{"".join(parts)}</div>' if parts else ""
+
+    top5_html = ""
+    for item in top5:
+        info = SECTION_COLORS.get(item.get("section", "macro"), SECTION_COLORS["macro"])
+        top5_html += f'<li><div><span class="sec">{info["name"]}</span>{item["summary"]}</div></li>\n'
+
+    sections_html = ""
+    sec_no = 0
+    for sec_key, sec_info in SECTION_COLORS.items():
+        articles = sections.get(sec_key, {}).get("articles", [])
+        if not articles:
+            continue
+        sec_no += 1
+
+        arts_html = ""
+        for art in articles:
+            fmt = art.get("format", "A")
+            if fmt not in ("A", "B"):
+                arts_html += f'''<article class="article brief">
+  <h3>{art.get("title", "")}</h3>
+  <p class="body">{art.get("summary", "")}</p>
+  {sources_block(art)}
+</article>
+'''
+                continue
+
+            parts = []
+
+            def field(label, value):
+                if value:
+                    parts.append(f'<p class="label">{label}</p><p class="body">{value}</p>')
+
+            field("發生什麼事", art.get("what_happened", art.get("latest_development", "")))
+            field("關鍵數據", art.get("key_data", ""))
+            field("解讀", art.get("interpretation", ""))
+            field("傳導鏈", art.get("transmission", ""))
+            structural = art.get("structural_or_cyclical", "")
+            if structural:
+                field("結構性" if "結構" in structural else "週期性", structural)
+            field("矛盾訊號", art.get("contradiction", ""))
+            field("分叉情境", art.get("scenarios", ""))
+
+            outlook = art.get("outlook", {})
+            if isinstance(outlook, dict) and outlook:
+                rows = "".join(
+                    f'<div class="outlook-row"><span>{name}</span><div>{outlook[k]}</div></div>'
+                    for k, name in (("short_term", "短期 · 1M"), ("mid_term", "中期 · 3–6M"), ("long_term", "長期 · 1Y+"))
+                    if outlook.get(k)
+                )
+                parts.append(f'<p class="label">展望</p>{rows}')
+
+            watch_list = art.get("watch_list", [])
+            if watch_list:
+                items = "".join(f"<span>{w}</span>" for w in watch_list)
+                parts.append(f'<p class="label">持續追蹤</p><p class="watch">{items}</p>')
+
+            interview = []
+            if art.get("interview_angle"):
+                interview.append(f'<p class="label">面試角度</p><p class="body">{art["interview_angle"]}</p>')
+            if art.get("interview_verbal"):
+                interview.append(f'<p class="label">口說版</p><p class="verbal">「{art["interview_verbal"]}」</p>')
+            interview_html = f'<div class="interview">{"".join(interview)}</div>' if interview else ""
+
+            kind = "持續追蹤中" if fmt == "B" else "深度解析"
+            arts_html += f'''<article class="article">
+  <h3>{art.get("title", "")}</h3>
+  <p class="kind">{kind}</p>
+  {"".join(parts)}
+  {interview_html}
+  {sources_block(art)}
+</article>
+'''
+
+        sections_html += f'''<section class="section">
+  <div class="section-header">
+    <span class="section-num">{sec_no:02d}</span>
+    <h2>{sec_info["name"]}</h2>
+  </div>
+  {arts_html}
+</section>
+'''
+
+    return f"""<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MA 時事日報 — {date}</title>
+  {MINIMAL_FONTS}
+  <style>
+{MINIMAL_CSS}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <p class="eyebrow">Daily Briefing · <a href="index.html">Archive</a></p>
+      <h1>MA 時事日報</h1>
+      <p class="meta"><span>{date}　{day}</span><span>{total} 則精選</span><span>{src_count} 個來源</span></p>
+    </header>
+
+    <section class="top5">
+      <p class="eyebrow">Today's Five</p>
+      <ol>{top5_html}</ol>
+    </section>
+
+    {sections_html}
+
+    <footer>
+      <p>由 Claude 分析產出 · MA 面試準備用</p>
+      <p>CNBC · BBC · FT · WSJ · Al Jazeera · Yahoo Finance · TechCrunch · 經濟日報 · 工商時報 · 中央社 · 自由財經 · MoneyDJ</p>
+    </footer>
+  </div>
+</body>
+</html>"""
 
 
 def _hex_to_rgb(hex_color: str) -> str:

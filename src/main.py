@@ -25,7 +25,7 @@ if sys.stdout.encoding != "utf-8":
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
 
 from fetch_news import fetch_all_feeds
-from generate_html import generate_html
+from generate_html import generate_html, MINIMAL_CSS, MINIMAL_FONTS
 
 # ── 資料夾 ──
 ROOT_DIR = Path(__file__).parent.parent
@@ -276,39 +276,27 @@ def generate_index(docs_dir: Path):
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MA 時事日報 — 歷史期數</title>
+  {MINIMAL_FONTS}
   <style>
-    body {{
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', system-ui, sans-serif;
-      background: #FFFFFF;
-      color: #333333;
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 48px 16px;
-      -webkit-font-smoothing: antialiased;
-    }}
-    h1 {{ font-size: 28px; font-weight: 700; margin-bottom: 8px; text-align: center; color: #1A1A1A; }}
-    .subtitle {{ text-align: center; font-size: 14px; color: #5F6368; margin-bottom: 32px; }}
-    ul {{ list-style: none; padding: 0; }}
-    li {{
-      padding: 16px 20px;
-      background: rgba(0,0,0,0.02);
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 12px;
-      margin-bottom: 8px;
-      transition: all 0.2s;
-    }}
-    li:hover {{ background: rgba(26,115,232,0.04); border-color: rgba(26,115,232,0.3); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.06); }}
-    a {{ color: #1A73E8; text-decoration: none; font-size: 17px; font-weight: 500; }}
-    a:hover {{ opacity: 0.7; }}
-    .count {{ color: #5F6368; font-size: 14px; margin-top: 8px; text-align: center; }}
-    footer {{ text-align: center; margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(0,0,0,0.08); font-size: 13px; color: #5F6368; }}
+{MINIMAL_CSS}
+    .archive {{ list-style: none; }}
+    .archive li {{ border-top: 1px solid var(--rule); }}
+    .archive li:last-child {{ border-bottom: 1px solid var(--rule); }}
+    .archive a {{ display: block; padding: 22px 0; border: none; font-family: var(--serif); font-size: 18px; color: var(--ink); letter-spacing: 0.08em; transition: padding 0.4s ease, color 0.3s; }}
+    .archive a:hover {{ padding-left: 12px; }}
+    footer {{ margin-top: 120px; }}
   </style>
 </head>
 <body>
-  <h1>MA 時事日報</h1>
-  <p class="count">共 {len(html_files)} 期</p>
-  <ul>{links}</ul>
-  <footer>MA 面試時事準備 · 每日更新</footer>
+  <div class="container">
+    <header>
+      <p class="eyebrow">Archive</p>
+      <h1>MA 時事日報</h1>
+      <p class="meta"><span>共 {len(html_files)} 期</span><span>每日更新</span></p>
+    </header>
+    <ul class="archive">{links}</ul>
+    <footer>MA 面試時事準備</footer>
+  </div>
 </body>
 </html>"""
 
@@ -444,7 +432,7 @@ def main():
     cmd = sys.argv[1].lower()
 
     # Parse --theme flag from any position
-    theme = "light"
+    theme = "minimal"
     remaining_args = []
     for arg in sys.argv[2:]:
         if arg.startswith("--theme="):
@@ -475,14 +463,15 @@ MA 時事日報 — 使用方式
   python main.py fetch                  只抓 RSS + 產生 prompt
   python main.py generate               貼回 Claude 的 JSON → 產出 HTML
   python main.py generate FILE          從檔案讀取分析 JSON → 產出 HTML
-  python main.py generate --theme=ocean 指定主題（apple / ocean / autumn）
+  python main.py generate --theme=ocean 指定主題（minimal / light / apple / ocean / autumn）
   python main.py help                   顯示此說明
 
 主題選項：
+  minimal — Minimal Gallery 極簡留白（大量留白、細線、襯線標題，預設）
   apple   — Apple Style（深黑底 + 藍色光暈）
   ocean   — Ocean Calm 深海藍（沈穩商務風）
   autumn  — Autumn Warm 秋日暖陽（溫暖咖啡金）
-  light   — Light 清新白（白色底 + 藍色強調，預設）
+  light   — Light 清新白（白色底 + 藍色強調）
         """)
         return 0
 
