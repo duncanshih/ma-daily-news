@@ -25,7 +25,7 @@ if sys.stdout.encoding != "utf-8":
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
 
 from fetch_news import fetch_all_feeds
-from generate_html import generate_html, MINIMAL_CSS, MINIMAL_FONTS
+from generate_html import generate_html, MINIMAL_CSS, MINIMAL_FONTS, MINIMAL_HEAD_JS
 
 # ── 資料夾 ──
 ROOT_DIR = Path(__file__).parent.parent
@@ -277,6 +277,7 @@ def generate_index(docs_dir: Path):
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>MA 時事日報 — 歷史期數</title>
   {MINIMAL_FONTS}
+  {MINIMAL_HEAD_JS}
   <style>
 {MINIMAL_CSS}
     .archive {{ list-style: none; }}
